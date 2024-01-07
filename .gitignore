@@ -1,0 +1,13 @@
+./server/node_modules
+./server/converage
+./server/build
+./server/dist
+./server/dist/*
+!server/dist/*.html
+
+
+./client/node_modules
+./client/converage
+./client/build
+./client/dist
+./client/dist/*
