@@ -1,0 +1,91 @@
+$font-family_1: "Oswald", sans-serif;
+$font-family_2: "Bebas Neue", cursive;
+
+.testimonials {
+  padding: 3rem 5rem;
+  text-align: center;
+  background-color: #3794d1;
+
+  h2 {
+    font-family: $font-family_2;
+    position: relative;
+    text-align: center;
+    color: #fefffe;
+    font-weight: bolder;
+    text-indent: 10px;
+    font-size: 3rem;
+  }
+
+  .up {
+    position: relative;
+    bottom: 5%;
+  }
+
+  .row {
+    justify-content: center;
+  }
+
+  h3 {
+    align-items: center;
+  }
+  .slick-prev:before,
+  .slick-next:before {
+    color: #78a48d;
+  }
+  .card {
+    border-bottom: 3px #0c7f3e solid !important;
+    transition: 0.5s;
+    margin-top: 30px;
+    background: #fefffe;
+    height: 550px;
+    width: 96%;
+    border-radius: 10px;
+    padding: 2rem;
+
+    @media (max-width: 500px) {
+      width: 100%;
+    }
+
+    p {
+      font-size: 18px;
+      text-align: justify;
+      padding-top: 30px;
+      @media (max-width: 1366px) {
+        font-size: 16px;
+        text-align: center;
+      }
+    }
+
+    i {
+      background-color: #fff;
+      color: #1a75b0;
+      width: 60px;
+      height: 60px;
+      line-height: 65px;
+      margin: -40px auto 0 auto;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+        0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    img {
+      margin: 0px auto;
+      border-radius: 50%;
+      max-width: 25%;
+    }
+    @media (max-width: 480px) {
+      border-radius: 50%;
+      max-width: 25%;
+    }
+
+    .blockquote-footer {
+      margin-top: 35px;
+      font-family: "Montserrat Bold";
+      line-height: 2px;
+    }
+
+    .testimonials-book-title {
+      color: #1a75b0;
+      line-height: 20px;
+    }
+  }
+}

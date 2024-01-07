@@ -1,0 +1,20 @@
+$color_1: #555;
+$color_2: #333;
+$color_3: #fff;
+$color_4: #cf711f;
+$font-family_1: "Rubik", sans-serif;
+$font-family_2: inherit;
+$background-color_1: #fdf2e9;
+$background-color_2: #e67e22;
+$background-color_3: #fff;
+$background-color_4: #cf711f;
+
+.sub-header {
+  color: #0d7f3f !important;
+  border-color: #20679f !important;
+}
+
+.header-container {
+  display: "flex";
+  position: "relative";
+}

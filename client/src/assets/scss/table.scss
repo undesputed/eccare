@@ -1,0 +1,29 @@
+/* styles.scss */
+
+.table-container {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 20px;
+  max-height: 100px; /* Set your desired max height */
+  overflow-y: auto;
+
+  th {
+    background-color: #f2f2f2;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+  }
+
+  td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  td.text-right {
+    text-align: right;
+  }
+
+  td.text-left {
+    text-align: left;
+  }
+}

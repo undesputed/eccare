@@ -1,0 +1,315 @@
+$color_1: #888;
+$color_2: #000;
+$color_3: red;
+$color_4: #fff;
+$background-color_1: #efefef;
+$background-color_2: transparent;
+
+.hidden {
+  display: none;
+}
+.footer-gray {
+  background-color: $background-color_1;
+  width: 100%;
+}
+.footer-custom {
+  color: $color_1;
+  font: normal normal 12px/1.4 "HelveticaNeue-Light", "Helvetica Neue Light",
+    "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  max-width: 1530px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 24px;
+  &:after {
+    display: table;
+    clear: both;
+    content: "";
+  }
+  a {
+    text-decoration: none;
+    color: $color_1;
+    padding: 5px 0;
+    display: block;
+    &:link {
+      text-decoration: none;
+      color: $color_1;
+      padding: 5px 0;
+      display: block;
+    }
+    &:visited {
+      text-decoration: none;
+      color: $color_1;
+      padding: 5px 0;
+      display: block;
+    }
+    &:hover {
+      text-decoration: underline;
+      color: $color_1;
+      cursor: pointer;
+    }
+    &:active {
+      text-decoration: underline;
+      color: $color_1;
+      cursor: pointer;
+    }
+  }
+  .footer-legal {
+    a {
+      display: inline;
+    }
+  }
+}
+.footer-lists {
+  &:after {
+    display: table;
+    clear: both;
+    content: "";
+  }
+}
+.ftr-hdr {
+  color: $color_2;
+  font: 22px/1.4 "BebasNeueRegular", BebasNeue, "Bebas Neue", Arial, sans-serif;
+  margin: 1em 0 0;
+}
+.footer-list-wrap {
+  width: 50%;
+  float: left;
+  box-sizing: border-box;
+}
+.ftr-links-sub {
+  padding: 0;
+  margin: 0;
+  &:after {
+    display: table;
+    clear: both;
+    content: "";
+  }
+  li {
+    display: block;
+    list-style-type: none;
+    margin: 0;
+    padding: 3px 0;
+    color: $color_1;
+    font: normal normal 12px "HelveticaNeue-Light", "Helvetica Neue Light",
+      "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    text-transform: uppercase;
+    .link {
+      text-decoration: none;
+      color: $color_1;
+      padding: 5px 0;
+      display: block;
+      &:hover {
+        text-decoration: underline;
+        color: $color_1;
+        cursor: pointer;
+      }
+    }
+  }
+}
+.footer-email {
+  text-align: center;
+}
+#ftrEmailForm {
+  height: 44px;
+  .error {
+    display: none;
+    color: $color_3;
+    text-align: left;
+  }
+  #ftrEmailInput {
+    background: none repeat scroll 0 0 #fff;
+    border: 1px solid #d6d6d6;
+    box-sizing: border-box;
+    color: $color_1;
+    float: left;
+    font: normal normal 14px/1.4 "HelveticaNeue-Light", "Helvetica Neue Light",
+      "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    padding: 5px;
+    width: 70%;
+    height: 100%;
+    &:hover {
+      border: 1px solid #888;
+    }
+    &:focus {
+      border: 1px solid #ef9223;
+      outline: #ef9223 auto 5px;
+    }
+  }
+  .button {
+    width: 30%;
+    height: 100%;
+    padding: 5px;
+    float: left;
+    border: 1px solid #dfdfdf;
+    box-sizing: border-box;
+    color: $color_2;
+    font: normal bold 18px/1 BebasFamily, BebasNeueRegular, "Bebas Neue",
+      Helvetica, Arial, sans-serif;
+    text-align: center;
+    text-transform: uppercase;
+    background: #fff;
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJod…EiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+    background: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0%, white),
+      color-stop(100%, #e1e1e1)
+    );
+    background: -webkit-linear-gradient(top, white 0, #e1e1e1 100%);
+    background: -moz-linear-gradient(top, white 0, #e1e1e1 100%);
+    background: -ms-linear-gradient(top, white 0, #e1e1e1 100%);
+    background: -o-linear-gradient(top, white 0, #e1e1e1 100%);
+    background: linear-gradient(to bottom, white 0, #e1e1e1 100%);
+    cursor: pointer;
+    vertical-align: middle;
+    outline: none;
+    &:hover {
+      background: black;
+      color: $color_4;
+      outline: none;
+    }
+    &:active {
+      background: black;
+      color: $color_4;
+      outline: none;
+    }
+  }
+}
+.footer-social {
+  text-align: center;
+  ul {
+    padding: 0;
+    display: inline-block;
+    list-style-type: none;
+    &:after {
+      display: table;
+      clear: both;
+      content: "";
+    }
+  }
+  li {
+    float: left;
+    margin: 0 15px 0 0;
+    padding: 0;
+  }
+}
+.footer-legal {
+  padding: 15px 0 0;
+  clear: left;
+}
+.footer-payment {
+  text-align: center;
+  ul {
+    padding: 0;
+    display: inline-block;
+    list-style-type: none;
+    li {
+      display: inline-block;
+      margin: 0 6px;
+    }
+  }
+}
+.ftr-bbb {
+  span {
+    background-image: url("http://cache1.artprintimages.com/images/jump_pages/rebrand2/images/subnav2.png");
+    background-repeat: no-repeat;
+    background-color: $background-color_2;
+    cursor: pointer;
+    display: inline-block;
+    height: 36px;
+    margin: 0;
+    padding: 0;
+    background-position: -339px -8px;
+    width: 96px;
+  }
+}
+.ftr-stella {
+  span {
+    background-image: url("http://cache1.artprintimages.com/images/jump_pages/rebrand2/images/subnav2.png");
+    background-repeat: no-repeat;
+    background-color: $background-color_2;
+    cursor: pointer;
+    display: inline-block;
+    height: 36px;
+    margin: 0;
+    padding: 0;
+    background-position: -339px -107px;
+    width: 57px;
+  }
+}
+@media only screen and (min-width: 768px) {
+  .ftr-hdr {
+    font-size: 18px;
+  }
+  .footer-list-wrap {
+    width: 25%;
+  }
+  .footer-custom {
+    a {
+      padding: 0;
+      &:link {
+        padding: 0;
+      }
+      &:visited {
+        padding: 0;
+      }
+    }
+  }
+  .ftr-links-sub {
+    li {
+      .link {
+        padding: 0;
+      }
+    }
+  }
+  .footer-lists {
+    width: 100%;
+  }
+  .footer-email {
+    width: 50%;
+    float: left;
+    text-align: left;
+  }
+  .footer-social {
+    width: 45%;
+    margin-left: 5%;
+    float: left;
+    text-align: left;
+  }
+  .footer-legal {
+    width: 66.6666%;
+    float: left;
+  }
+  .footer-payment {
+    width: 33.3333%;
+    float: left;
+  }
+}
+@media only screen and (min-width: 568px) {
+  .footer-list-wrap {
+    width: 33.3333%;
+  }
+}
+@media only screen and (min-width: 1008px) {
+  .footer-lists {
+    width: 66.6666%;
+    float: left;
+  }
+  .footer-email {
+    width: 33.3333%;
+  }
+  .footer-social {
+    width: 33.3333%;
+    float: right;
+    margin-left: 0;
+  }
+  .footer-payment {
+    text-align: left;
+    ul {
+      li.ftr-stella {
+        margin-left: 0;
+      }
+    }
+  }
+}
