@@ -27,3 +27,10 @@ export function updatePatient(
 ): Promise<ec_care_patient> {
   return API.put<ec_care_patient>(`patient`, patient).then((res) => res.data);
 }
+
+// Delete
+export function deletePatient(patientId: number): Promise<ec_care_patient> {
+  return API.delete<ec_care_patient>(`patient/${patientId}`).then(
+    (res) => res.data
+  );
+}

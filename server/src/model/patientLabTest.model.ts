@@ -104,4 +104,22 @@ export default class PatientLabTest {
       );
     });
   }
+
+  static async deleteLabTestByPatient(patientId: number): Promise<any | null> {
+    return new Promise((resolve, reject) => {
+      sql.query(
+        `DELETE FROM lms_patient_labTest
+                WHERE lms_patient_id = ${patientId}
+                `,
+        (err, res: any) => {
+          if (err) {
+            console.log(err);
+            reject(new DatabaseQueryError("Error Deleting Test Result"));
+          } else {
+            resolve(res);
+          }
+        }
+      );
+    });
+  }
 }

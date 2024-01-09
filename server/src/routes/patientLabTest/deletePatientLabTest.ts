@@ -19,4 +19,18 @@ router.delete(
     }
   }
 );
+
+router.delete(
+  "/api/deletePatientLabTest/:patientId",
+  async (req: Request, res: Response) => {
+    try {
+      const patientId: any = req.params.patientId;
+      const response = await PatientLabTest.deleteLabTestByPatient(patientId);
+      res.status(200).send(response);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+);
+
 export { router as deletePatientLabTest };

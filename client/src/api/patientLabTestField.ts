@@ -36,3 +36,11 @@ export function deletePatientLabTestFIeld(
     (res) => res.data
   );
 }
+
+export function deleteLabTestFieldByPatient(
+  lms_patient_id: number | string
+): Promise<any> {
+  return API.delete<any>(`deletePatientLabTestField/${lms_patient_id}`).then(
+    (res) => res.data
+  );
+}

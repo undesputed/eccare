@@ -23,6 +23,8 @@ import { patientLabTestField } from "./routes/patientLabTestField/patientLabTest
 import { updatePatientLabTestField } from "./routes/patientLabTestField/updatePatientLabTestField";
 import { deletePatientLabTestField } from "./routes/patientLabTestField/deletePatientLabTestField";
 import { deletePatientLabTest } from "./routes/patientLabTest/deletePatientLabTest";
+import { updatePatient } from "./routes/patient/updatePatient";
+import { deletePatient } from "./routes/patient/deletePatient";
 
 const app = express();
 var corsOptions = {
@@ -50,10 +52,12 @@ app.use(patientLabTestField);
 
 // List all the Update Routes
 app.use(updatePatientLabTestField);
+app.use(updatePatient);
 
 // List all the Delete Routes
 app.use(deletePatientLabTest);
 app.use(deletePatientLabTestField);
+app.use(deletePatient);
 
 app.all("*", async (req, res) => {
   throw new NotFoundError("Not Found");

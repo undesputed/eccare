@@ -1,18 +1,26 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { PatientType } from "./patient";
-import { getPatientById, getPatientDetailsById } from "../../api/patientAPI";
 import {
+  deletePatient,
+  getPatientById,
+  getPatientDetailsById,
+  updatePatient,
+} from "../../api/patientAPI";
+import {
+  deleteLabTestByPatient,
   deletePatientLabTest,
   getLabTestByPatient,
   getLabTestByPatientAndTest,
 } from "../../api/patientLabTestAPI";
 import {
+  deleteLabTestFieldByPatient,
   deletePatientLabTestFIeld,
   getLabTestFieldByPatient,
   updateResult,
 } from "../../api/patientLabTestField";
 import { C } from "styled-icons/fa-solid";
 import { getLabTestNotByPatient } from "../../api/labTestAPI";
+import { ec_care_patient } from "../../entity/ec_care_patient";
 
 const initialState: PatientType = {
   patient: {
@@ -50,6 +58,7 @@ const initialState: PatientType = {
   paperSize: "legal",
   medTech: 0,
   addTestModal: false,
+  patientUpdateModal: false,
   loading: false,
   status: "idle",
   error: null,
@@ -117,6 +126,14 @@ export const updatePatientLabTestField = createAsyncThunk(
   }
 );
 
+export const updatePatientInfo = createAsyncThunk(
+  "patient/updatePatientInfo",
+  async (patient: ec_care_patient) => {
+    const response = await updatePatient(patient);
+    return response;
+  }
+);
+
 export const removePatientLabTestField = createAsyncThunk(
   "patient/removePatientLabTestField",
   async (lms_patient_labTest_id: number) => {
@@ -132,6 +149,30 @@ export const removePatientLabTest = createAsyncThunk(
       params.lms_patient_id,
       params.lms_labTest_id
     );
+    return response;
+  }
+);
+
+export const removeLabTestByPatient = createAsyncThunk(
+  "patient/removeLabTestByPatient",
+  async (patientId: number) => {
+    const response = await deleteLabTestByPatient(patientId);
+    return response;
+  }
+);
+
+export const removeLabTestFieldByPatient = createAsyncThunk(
+  "patient/removeLabTestFieldByPatient",
+  async (patientId: number) => {
+    const response = await deleteLabTestFieldByPatient(patientId);
+    return response;
+  }
+);
+
+export const removePatientById = createAsyncThunk(
+  "patient/removePatientById",
+  async (patientId: number) => {
+    const response = await deletePatient(patientId);
     return response;
   }
 );
@@ -174,7 +215,32 @@ const patientSlice = createSlice({
     openAddTestModal: (state) => {
       state.addTestModal = !state.addTestModal;
     },
-    addNewTest: (state, action) => {},
+    onUpdateModal: (state) => {
+      state.patientUpdateModal = !state.patientUpdateModal;
+    },
+    setPatientInfo: (state, action) => {
+      state.patient = {
+        ...state.patient,
+        [action.payload.name]: action.payload.value,
+      };
+    },
+    setAge: (state, action) => {
+      state.patient.age = action.payload;
+    },
+    clearFields: (state) => {
+      state.patient = {
+        id: null,
+        fullName: null,
+        birthday: null,
+        age: null,
+        gender: null,
+        dateOfVisit: null,
+        email: null,
+        phone: null,
+        company: null,
+        status: null,
+      };
+    },
   },
   extraReducers(builder) {
     builder
@@ -273,6 +339,42 @@ const patientSlice = createSlice({
       })
       .addCase(fetchLabTestByPatientAndTest.rejected, (state) => {
         state.status = "rejected";
+      })
+      .addCase(updatePatientInfo.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(updatePatientInfo.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(updatePatientInfo.rejected, (state) => {
+        state.status = "rejected";
+      })
+      .addCase(removeLabTestByPatient.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(removeLabTestByPatient.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(removeLabTestByPatient.rejected, (state) => {
+        state.status = "rejected";
+      })
+      .addCase(removeLabTestFieldByPatient.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(removeLabTestFieldByPatient.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(removeLabTestFieldByPatient.rejected, (state) => {
+        state.status = "rejected";
+      })
+      .addCase(removePatientById.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(removePatientById.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(removePatientById.rejected, (state) => {
+        state.status = "rejected";
       });
   },
 });
@@ -287,6 +389,10 @@ export const {
   setPaperSize,
   setMedTech,
   openAddTestModal,
+  onUpdateModal,
+  setPatientInfo,
+  setAge,
+  clearFields,
 } = patientSlice.actions;
 
 export default patientSlice.reducer;

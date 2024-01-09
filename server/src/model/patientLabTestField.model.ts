@@ -113,4 +113,26 @@ export default class PatientLabTestField {
       );
     });
   }
+
+  static async deleteLabTestFieldByPatient(
+    patientId: number
+  ): Promise<any | null> {
+    return new Promise((resolve, reject) => {
+      sql.query(
+        `DELETE FROM lms_patient_labTest_field
+                WHERE lms_patient_labTest_id IN (
+                  SELECT id from lms_patient_labTest where lms_patient_id = ${patientId}
+                )
+                `,
+        (err, res: any) => {
+          if (err) {
+            console.log(err);
+            reject(new DatabaseQueryError("Error Deleting Test Result"));
+          } else {
+            resolve(res);
+          }
+        }
+      );
+    });
+  }
 }

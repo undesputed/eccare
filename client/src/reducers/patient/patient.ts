@@ -16,6 +16,7 @@ export type PatientType = {
   paperSize: string;
   medTech: number;
   addTestModal: boolean;
+  patientUpdateModal: boolean;
   loading: boolean;
   testId: number;
   status: string;

@@ -29,6 +29,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DialogComponent from "../components/Dialog/Dialog";
 import PreviewModal from "../pages/dashboard/component/previewModal";
 import ec_care_patientLabTest from "../entity/ec_care_patientLabTest";
+import AddIcon from "@mui/icons-material/Add";
 
 interface dashboardProps {
   handleOnChange: (event: any) => void;
@@ -152,6 +153,20 @@ const DashboardComponent: React.FC<dashboardProps> = ({
             PATIENT FORM
           </Typography>
           <div>
+            <Button
+              sx={{
+                height: "30px",
+                width: "13rem",
+                borderRadius: 0,
+                border: "1px solid #20679f",
+                ml: 1,
+              }}
+              endIcon={<AddIcon />}
+              onClick={handlePreview}
+              color="secondary"
+            >
+              ADD X-RAY PATIENT
+            </Button>
             <Button
               sx={{
                 height: "30px",

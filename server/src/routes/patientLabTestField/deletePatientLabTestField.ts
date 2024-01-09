@@ -15,4 +15,20 @@ router.delete(
     }
   }
 );
+
+router.delete(
+  "/api/deletePatientLabTestField/:patientId",
+  async (req: Request, res: Response) => {
+    try {
+      const patientId: any = req.params.patientId;
+      const response = await PatientLabTestField.deleteLabTestFieldByPatient(
+        patientId
+      );
+      res.status(200).send(response);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+);
+
 export { router as deletePatientLabTestField };

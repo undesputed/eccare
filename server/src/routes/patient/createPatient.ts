@@ -38,7 +38,7 @@ router.post(
       created_at: new Date(),
       updated_at: null,
     });
-    console.log(newPatient);
+    
     try {
       const createPatient: any = await Patient.create(newPatient);
       newPatient.id = createPatient.insertId;

@@ -16,17 +16,33 @@ import CenterFocusWeakIcon from "@mui/icons-material/CenterFocusWeak";
 import EditIcon from "@mui/icons-material/Edit";
 import PreviewIcon from "@mui/icons-material/Preview";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
+import DialogComponent from "../components/Dialog/Dialog";
+import UpdateModal from "../pages/patient/updateModal.tsx/updateModal";
 
 interface PatientProps {
   patients: ec_care_patient[];
   handleOnSubmit: () => void;
   handleOpenDetail: (id: GridRowId) => void;
+  handleUpdateModal: () => void;
+  handleModalSubmit: () => void;
+  handleOnEdit: (id: GridRowId) => void;
+  handleOnChange: (event: any) => void;
+  handleOnDelete: (id: any) => void;
+  updateModal: boolean;
+  patientInfo: ec_care_patient;
 }
 
 const PatientComponent: React.FC<PatientProps> = ({
   handleOnSubmit,
   handleOpenDetail,
+  handleUpdateModal,
+  handleModalSubmit,
+  handleOnEdit,
+  handleOnChange,
+  handleOnDelete,
   patients,
+  updateModal,
+  patientInfo,
 }) => {
   const columns: GridColDef[] = [
     {
@@ -140,21 +156,17 @@ const PatientComponent: React.FC<PatientProps> = ({
       getActions: ({ id, row }) => {
         return [
           <GridActionsCellItem
-            icon={<PreviewIcon />}
-            label="Preview"
-            className="textPrimary"
-            color="inherit"
-          />,
-          <GridActionsCellItem
             icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
             color="inherit"
+            onClick={() => handleOnEdit(id)}
           />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
             color="inherit"
+            onClick={() => handleOnDelete(id)}
           />,
           <GridActionsCellItem
             icon={<AnalyticsIcon />}
@@ -168,6 +180,17 @@ const PatientComponent: React.FC<PatientProps> = ({
   ];
   return (
     <>
+      <DialogComponent
+        open={updateModal}
+        handleClose={handleUpdateModal}
+        title="Update Patient"
+        scroll="paper"
+        handleSubmit={handleModalSubmit}
+        showSubmit={true}
+        maxWidth={"lg"}
+      >
+        <UpdateModal patient={patientInfo} handleOnChange={handleOnChange} />
+      </DialogComponent>
       <Paper className="paper" elevation={0} sx={{ p: { xs: 2, md: 3 } }}>
         <Box
           position={"relative"}

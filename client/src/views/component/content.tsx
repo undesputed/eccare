@@ -29,8 +29,6 @@ const TestContent: React.FC<ContentProps> = ({ labTestfields, type }) => {
         setBackground("#D0E2F3");
       } else if (type === "CLINICAL CHEMISTRY RESULT") {
         setBackground("#D9EAD3");
-      } else if (type === "IMAGING") {
-        setBackground("#FFFFFF");
       } else {
         setBackground("#FFF3CC");
       }

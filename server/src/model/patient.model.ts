@@ -89,4 +89,38 @@ export default class Patient {
       );
     });
   }
+
+  static async update(updatedPatient: Patient): Promise<Patient | null> {
+    return new Promise((resolve, reject) => {
+      const query = "UPDATE lms_patient SET ? where id = ?";
+      const { id, ...updatedValues } = updatedPatient;
+
+      sql.query(query, [updatedValues, updatedPatient.id], (err, res: any) => {
+        if (err) {
+          console.log(err);
+          reject(new DatabaseQueryError("Error Updated Patient"));
+        } else {
+          resolve(res.affectedRows > 0 ? updatedPatient : null);
+        }
+      });
+    });
+  }
+
+  static async delete(patient_id: number | string): Promise<any | null> {
+    return new Promise((resolve, reject) => {
+      sql.query(
+        `DELETE FROM lms_patient
+                WHERE id = ${patient_id}
+                `,
+        (err, res: any) => {
+          if (err) {
+            console.log(err);
+            reject(new DatabaseQueryError("Error Deleting Test Result"));
+          } else {
+            resolve(res);
+          }
+        }
+      );
+    });
+  }
 }

@@ -8,7 +8,7 @@ export class ec_care_patient {
   email: string | null | undefined;
   phone: number | null | undefined;
   company: string | null | undefined;
-  status: number | null;
+  status: number | null | undefined;
 
   constructor(patient: Partial<ec_care_patient>) {
     this.id = patient.id;
