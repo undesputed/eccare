@@ -28,7 +28,7 @@ import { deletePatient } from "./routes/patient/deletePatient";
 
 const app = express();
 var corsOptions = {
-  origin: ["http://localhost:3000"],
+  origin: ["http://localhost:3000", "http://52.221.218.249"],
 };
 app.use(json());
 app.use(cors(corsOptions));

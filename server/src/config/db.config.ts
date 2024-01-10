@@ -14,7 +14,7 @@ export const databaseConfig: DatabaseConfig = {
   PORT: process.env.DB_PORT,
   // HOST: 'ec2-13-229-122-211.ap-southeast-1.compute.amazonaws.com',
   // USER: 'root',
-  // PASSWORD: 'root',
+  // PASSWORD: 'MyKlKJkZ-8w:',
   // DB: 'ec_care',
   // PORT: 3306,
 };
