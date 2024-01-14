@@ -2,9 +2,12 @@ import React, { MutableRefObject } from "react";
 import {
   Box,
   Button,
+  Checkbox,
   Container,
   Divider,
   FormControl,
+  FormControlLabel,
+  FormGroup,
   Grid,
   InputLabel,
   MenuItem,
@@ -15,7 +18,6 @@ import {
 } from "@mui/material";
 import TextFieldComponent from "../components/TextField/textField";
 import SelectField from "../components/SelectField/SelectField";
-import DeleteIcon from "@mui/icons-material/Delete";
 import SendIcon from "@mui/icons-material/Send";
 import { ec_care_patient } from "../entity/ec_care_patient";
 import {
@@ -30,6 +32,7 @@ import DialogComponent from "../components/Dialog/Dialog";
 import PreviewModal from "../pages/dashboard/component/previewModal";
 import ec_care_patientLabTest from "../entity/ec_care_patientLabTest";
 import AddIcon from "@mui/icons-material/Add";
+import ec_care_xrayTest from "../entity/ec_care_xrayTest";
 
 interface dashboardProps {
   handleOnChange: (event: any) => void;
@@ -39,10 +42,13 @@ interface dashboardProps {
   handleOnSelect: (e: any) => void;
   handleModal: () => void;
   handleModalSubmit: () => void;
+  handleOnSelectXrayTest: (selection: any) => void;
+  selectedXrayTests: ec_care_xrayTest[];
   patientInfo: ec_care_patient;
   patientLabTest: ec_care_patientLabTest[];
   labTests: ec_care_labTest[];
   selectedLabTest: ec_care_labTest[];
+  xrayTests: ec_care_xrayTest[];
   fullNameRef: any;
   dateOfVisitRef: any;
   emailRef: any;
@@ -61,10 +67,12 @@ const DashboardComponent: React.FC<dashboardProps> = ({
   handleOnChange,
   handlePreview,
   handleKeyDown,
-  handleClearFields,
   handleOnSelect,
   handleModal,
   handleModalSubmit,
+  handleOnSelectXrayTest,
+  selectedXrayTests,
+  xrayTests,
   selectedLabTest,
   patientLabTest,
   patientInfo,
@@ -73,7 +81,6 @@ const DashboardComponent: React.FC<dashboardProps> = ({
   emailRef,
   genderRef,
   birthdayRef,
-  ageRef,
   phoneRef,
   companyRef,
   hmoRef,
@@ -120,6 +127,7 @@ const DashboardComponent: React.FC<dashboardProps> = ({
       },
     },
   ];
+
   return (
     <>
       <DialogComponent
@@ -135,6 +143,7 @@ const DashboardComponent: React.FC<dashboardProps> = ({
           patientLabTest={patientLabTest}
           labTests={labTests}
           selectedLabTest={selectedLabTest}
+          selectedXrayTests={selectedXrayTests}
         />
       </DialogComponent>
       <Paper className="paper" elevation={0} sx={{ p: { xs: 2, md: 3 } }}>
@@ -153,20 +162,6 @@ const DashboardComponent: React.FC<dashboardProps> = ({
             PATIENT FORM
           </Typography>
           <div>
-            <Button
-              sx={{
-                height: "30px",
-                width: "13rem",
-                borderRadius: 0,
-                border: "1px solid #20679f",
-                ml: 1,
-              }}
-              endIcon={<AddIcon />}
-              onClick={handlePreview}
-              color="secondary"
-            >
-              ADD X-RAY PATIENT
-            </Button>
             <Button
               sx={{
                 height: "30px",
@@ -326,7 +321,12 @@ const DashboardComponent: React.FC<dashboardProps> = ({
           flexDirection={"column"}
           my={3}
         >
-          <Box position={"relative"} my={2}>
+          <Box
+            position={"relative"}
+            my={2}
+            display={"flex"}
+            flexDirection={"row"}
+          >
             <Typography
               variant="h4"
               component={"h3"}
@@ -336,7 +336,7 @@ const DashboardComponent: React.FC<dashboardProps> = ({
               LABORATORY TESTS
             </Typography>
           </Box>
-          <Box>
+          <Box position={"relative"} width={"100%"}>
             <DataGrid
               rows={labTests}
               columns={columns}
@@ -364,6 +364,67 @@ const DashboardComponent: React.FC<dashboardProps> = ({
               onRowSelectionModelChange={handleOnSelect}
             />
           </Box>
+          <Box
+            position={"relative"}
+            my={2}
+            display={"flex"}
+            flexDirection={"row"}
+          >
+            <Typography
+              variant="h4"
+              component={"h3"}
+              color={"black"}
+              alignContent={"center"}
+            >
+              IMAGING TESTS
+            </Typography>
+          </Box>
+          <Box position={"relative"} width={"100%"}>
+            <DataGrid
+              rows={xrayTests}
+              columns={columns}
+              initialState={{
+                pagination: {
+                  paginationModel: { page: 0, pageSize: 10 },
+                },
+              }}
+              pageSizeOptions={[10, 20, 30]}
+              slots={{ toolbar: GridToolbar }}
+              disableColumnFilter
+              disableColumnSelector
+              disableDensitySelector
+              checkboxSelection
+              slotProps={{
+                toolbar: {
+                  showQuickFilter: true,
+                },
+              }}
+              sx={{
+                borderRadius: 0,
+                color: "black",
+              }}
+              rowHeight={35}
+              onRowSelectionModelChange={handleOnSelectXrayTest}
+            />
+          </Box>
+        </Box>
+        <Box
+          position={"relative"}
+          display={"flex"}
+          flexDirection={"column"}
+          mt={3}
+        >
+          <Box position={"relative"}>
+            <Typography
+              variant="h4"
+              component={"h3"}
+              color={"black"}
+              alignContent={"center"}
+            >
+              PACKAGES OFFERED
+            </Typography>
+          </Box>
+          <Box>List of Packages here....</Box>
         </Box>
       </Paper>
     </>

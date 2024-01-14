@@ -137,19 +137,19 @@ const Header: React.FC<HeaderProps> = ({ helmetTitle, children }) => {
                 }}
                 sx={
                   currentPathname === "/lab-test" ||
-                  currentPathname === "/lab-test/addField"
+                  currentPathname === "/lab-test/addField" ||
+                  currentPathname === "/lab-test/addLabtest"
                     ? {
                         backgroundColor: "#e6e6e6",
                       }
                     : null
                 }
               >
-                Add Lab Test
+                Laboratory Test
               </Button>
-              <Button className="sub-header">Lab Test Lists</Button>
-              <Button className="sub-header">HMO / Affliate</Button>
-              <Button className="sub-header">Med Techs</Button>
-              <Button className="sub-header">Appointments</Button>
+              <Button className="sub-header">Packages</Button>
+              <Button className="sub-header">HMO / AFFILIATE</Button>
+              <Button className="sub-header">Doctors</Button>
               <Button className="sub-header">Partner Clinics</Button>
               <Button className="sub-header">Partner Hospitals</Button>
             </ButtonGroup>

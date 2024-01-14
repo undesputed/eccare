@@ -18,6 +18,9 @@ const AdminDashboard = Loader(
   lazy(() => import("../pages/dashboard/dashboard"))
 );
 const LabTest = Loader(lazy(() => import("../pages/labTest/labTest")));
+const AddLabTest = Loader(
+  lazy(() => import("../pages/labTest/addLabTest/addLabTest"))
+);
 const AddField = Loader(
   lazy(() => import("../pages/labTest/addField/addField"))
 );
@@ -46,6 +49,10 @@ const routes: RouteObject[] = [
           {
             path: "",
             element: <LabTest />,
+          },
+          {
+            path: "addLabTest",
+            element: <AddLabTest />,
           },
           {
             path: "addField",

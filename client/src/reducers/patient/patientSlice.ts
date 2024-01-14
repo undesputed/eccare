@@ -21,6 +21,13 @@ import {
 import { C } from "styled-icons/fa-solid";
 import { getLabTestNotByPatient } from "../../api/labTestAPI";
 import { ec_care_patient } from "../../entity/ec_care_patient";
+import {
+  deletePatientXrayTest,
+  getAllPatientXrayTestByPatient,
+  updatePatientXrayTest,
+} from "../../api/patientXrayTestAPI";
+import { getAllXrayTestByPatient } from "../../api/xrayTestAPI";
+import ec_care_patientXrayTest from "../../entity/ec_care_patientXrayTest";
 
 const initialState: PatientType = {
   patient: {
@@ -50,6 +57,20 @@ const initialState: PatientType = {
     tests: [],
   },
   patientTestsFields: [],
+  pattientXrayTests: [],
+  selectedPatientXrayTest: {
+    id: null,
+    lms_patient_id: null,
+    lms_xrayTest_id: null,
+    result: null,
+    idNum: null,
+    description: null,
+    testDate: null,
+    status: null,
+    created_at: null,
+    updated_at: null,
+  },
+  xrayTests: [],
   patientLabTestId: 0,
   labTest: [],
   testId: 0,
@@ -118,6 +139,22 @@ export const fetchLabTestByPatientAndTest = createAsyncThunk(
   }
 );
 
+export const fetchPatientXrayTestsByPatient = createAsyncThunk(
+  "patient/fetchPatientXrayTestsByPatient",
+  async (patientId: number) => {
+    const response = await getAllPatientXrayTestByPatient(patientId);
+    return response;
+  }
+);
+
+export const fetchXrayTestByPatient = createAsyncThunk(
+  "patient/fetchXrayTestByPatient",
+  async (patientId: number) => {
+    const response = await getAllXrayTestByPatient(patientId);
+    return response;
+  }
+);
+
 export const updatePatientLabTestField = createAsyncThunk(
   "patient/updatePatientLabTestField",
   async (result: any[]) => {
@@ -130,6 +167,14 @@ export const updatePatientInfo = createAsyncThunk(
   "patient/updatePatientInfo",
   async (patient: ec_care_patient) => {
     const response = await updatePatient(patient);
+    return response;
+  }
+);
+
+export const editPatientXrayTest = createAsyncThunk(
+  "patient/editPatientXrayTest",
+  async (newPatientXrayTest: ec_care_patientXrayTest[]) => {
+    const response = await updatePatientXrayTest(newPatientXrayTest);
     return response;
   }
 );
@@ -173,6 +218,14 @@ export const removePatientById = createAsyncThunk(
   "patient/removePatientById",
   async (patientId: number) => {
     const response = await deletePatient(patientId);
+    return response;
+  }
+);
+
+export const removePatientXrayTest = createAsyncThunk(
+  "patient/removePatientXrayTest",
+  async (id: number) => {
+    const response = await deletePatientXrayTest(id);
     return response;
   }
 );
@@ -226,6 +279,12 @@ const patientSlice = createSlice({
     },
     setAge: (state, action) => {
       state.patient.age = action.payload;
+    },
+    setSelectedPatientXrayTest: (state, action) => {
+      state.selectedPatientXrayTest = action.payload;
+    },
+    setPatientXrayTest: (state, action) => {
+      state.pattientXrayTests = action.payload;
     },
     clearFields: (state) => {
       state.patient = {
@@ -375,6 +434,44 @@ const patientSlice = createSlice({
       })
       .addCase(removePatientById.rejected, (state) => {
         state.status = "rejected";
+      })
+      .addCase(fetchPatientXrayTestsByPatient.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchPatientXrayTestsByPatient.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.pattientXrayTests = action.payload;
+      })
+      .addCase(fetchPatientXrayTestsByPatient.rejected, (state) => {
+        state.status = "rejected";
+      })
+      .addCase(fetchXrayTestByPatient.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchXrayTestByPatient.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.xrayTests = action.payload;
+      })
+      .addCase(fetchXrayTestByPatient.rejected, (state) => {
+        state.status = "rejected";
+      })
+      .addCase(editPatientXrayTest.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(editPatientXrayTest.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(editPatientXrayTest.rejected, (state) => {
+        state.status = "rejected";
+      })
+      .addCase(removePatientXrayTest.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(removePatientXrayTest.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(removePatientXrayTest.rejected, (state) => {
+        state.status = "rejected";
       });
   },
 });
@@ -393,6 +490,8 @@ export const {
   setPatientInfo,
   setAge,
   clearFields,
+  setSelectedPatientXrayTest,
+  setPatientXrayTest,
 } = patientSlice.actions;
 
 export default patientSlice.reducer;

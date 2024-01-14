@@ -4,6 +4,8 @@ import {
   fetchLabTestByPatient,
   fetchPatientById,
   fetchPatientDetailsById,
+  fetchPatientXrayTestsByPatient,
+  fetchXrayTestByPatient,
   setLoading,
   setMedTech,
   setPatientId,
@@ -32,6 +34,12 @@ const PrintResult = () => {
   const medTech = useAppSelector((state: RootState) => state.patient.medTech);
   const paperSize = useAppSelector(
     (state: RootState) => state.patient.paperSize
+  );
+  const patientXrayTests = useAppSelector(
+    (state: RootState) => state.patient.pattientXrayTests
+  );
+  const xrayTests = useAppSelector(
+    (state: RootState) => state.patient.xrayTests
   );
 
   const handleOnback = () => {
@@ -97,6 +105,8 @@ const PrintResult = () => {
       await dispatch(fetchPatientById(id));
       await dispatch(fetchLabTestByPatient(id));
       await dispatch(fetchPatientDetailsById(id));
+      await dispatch(fetchPatientXrayTestsByPatient(id));
+      await dispatch(fetchXrayTestByPatient(id));
     } catch (err) {
       console.log(err);
     }
@@ -111,10 +121,12 @@ const PrintResult = () => {
         handlePrint={handlePrint}
         handleOnback={handleOnback}
         handleOnChangeMedTech={handleOnChangeMedTech}
+        patientXrayTests={patientXrayTests}
         componentRef={componentRef}
         patient={patient}
         paperSize={paperSize}
         medTech={medTech}
+        xrayTests={xrayTests}
       />
     </>
   );

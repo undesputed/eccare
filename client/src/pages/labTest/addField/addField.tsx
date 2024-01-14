@@ -45,7 +45,7 @@ const AddField = () => {
   };
 
   const handleOnSubmit = () => {
-    navigate("/lab-test");
+    navigate("/lab-test/addLabtest");
   };
 
   return (

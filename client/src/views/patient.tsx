@@ -28,6 +28,7 @@ interface PatientProps {
   handleOnEdit: (id: GridRowId) => void;
   handleOnChange: (event: any) => void;
   handleOnDelete: (id: any) => void;
+  handleFileChange: (e: any) => void;
   updateModal: boolean;
   patientInfo: ec_care_patient;
 }
@@ -40,6 +41,7 @@ const PatientComponent: React.FC<PatientProps> = ({
   handleOnEdit,
   handleOnChange,
   handleOnDelete,
+  handleFileChange,
   patients,
   updateModal,
   patientInfo,
@@ -207,19 +209,29 @@ const PatientComponent: React.FC<PatientProps> = ({
             PATIENT LISTS
           </Typography>
           <div>
-            <Button
-              sx={{
-                height: "30px",
-                width: "10rem",
-                borderRadius: 0,
-                border: "1px solid #20679f",
-                mr: 1,
-              }}
-              color="secondary"
-              endIcon={<ImportExportIcon />}
-            >
-              EXCEL IMPORT
-            </Button>
+            <label>
+              <input
+                type="file"
+                accept=".xlsx"
+                style={{ display: "none" }}
+                onChange={handleFileChange}
+              />
+              <Button
+                sx={{
+                  height: "30px",
+                  width: "10rem",
+                  borderRadius: 0,
+                  border: "1px solid #20679f",
+                  mr: 1,
+                  cursor: "pointer", // Add cursor pointer for better UX
+                }}
+                color="secondary"
+                component="span" // Make sure to set 'component="span"' to allow styling
+                endIcon={<ImportExportIcon />}
+              >
+                EXCEL IMPORT
+              </Button>
+            </label>
             <Button
               sx={{
                 height: "30px",

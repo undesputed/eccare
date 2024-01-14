@@ -25,6 +25,14 @@ import { deletePatientLabTestField } from "./routes/patientLabTestField/deletePa
 import { deletePatientLabTest } from "./routes/patientLabTest/deletePatientLabTest";
 import { updatePatient } from "./routes/patient/updatePatient";
 import { deletePatient } from "./routes/patient/deletePatient";
+import { pkg } from "./routes/package/package";
+import { labTestPackage } from "./routes/labTestPackage/labTestPackage";
+import { xrayTest } from "./routes/xrayTest/xrayTest";
+import { createXrayTest } from "./routes/xrayTest/createXrayTest";
+import { createPatientXrayTest } from "./routes/patientXrayTest/createPatientXrayTest";
+import { patientXrayTest } from "./routes/patientXrayTest/patientXrayTest";
+import { updatePatientXrayTest } from "./routes/patientXrayTest/updatePatientXrayTest";
+import { deletePatientXrayTest } from "./routes/patientXrayTest/deletePatientXrayTest";
 
 const app = express();
 var corsOptions = {
@@ -41,6 +49,8 @@ app.use(createLabTestField);
 app.use(createPatientLabTest);
 app.use(createPatientLabTestFieldField);
 app.use(createPatientLabTestFieldFieldResult);
+app.use(createXrayTest);
+app.use(createPatientXrayTest);
 
 // List all Retrieve Routes
 app.use(patient);
@@ -49,15 +59,21 @@ app.use(labTest);
 app.use(labTestField);
 app.use(patientLabTest);
 app.use(patientLabTestField);
+app.use(pkg);
+app.use(labTestPackage);
+app.use(xrayTest);
+app.use(patientXrayTest);
 
 // List all the Update Routes
 app.use(updatePatientLabTestField);
 app.use(updatePatient);
+app.use(updatePatientXrayTest);
 
 // List all the Delete Routes
 app.use(deletePatientLabTest);
 app.use(deletePatientLabTestField);
 app.use(deletePatient);
+app.use(deletePatientXrayTest);
 
 app.all("*", async (req, res) => {
   throw new NotFoundError("Not Found");

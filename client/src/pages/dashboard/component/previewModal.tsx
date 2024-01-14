@@ -4,12 +4,14 @@ import { Box, Grid, Typography } from "@mui/material";
 import ec_care_patientLabTest from "../../../entity/ec_care_patientLabTest";
 import logo from "../../../assets/image/logo/Logo.png";
 import ec_care_labTest from "../../../entity/ec_care_labTest";
+import ec_care_xrayTest from "../../../entity/ec_care_xrayTest";
 
 interface PreviewProps {
   patientInfo: ec_care_patient;
   labTests: ec_care_labTest[];
   patientLabTest: ec_care_patientLabTest[];
   selectedLabTest: ec_care_labTest[];
+  selectedXrayTests: ec_care_xrayTest[];
 }
 
 const PreviewModal: React.FC<PreviewProps> = ({
@@ -17,7 +19,27 @@ const PreviewModal: React.FC<PreviewProps> = ({
   patientInfo,
   patientLabTest,
   selectedLabTest,
+  selectedXrayTests,
 }) => {
+  const getTotal = () => {
+    let total = 0; // Initialize total to 0
+
+    if (selectedXrayTests) {
+      total += Object.values(selectedXrayTests).reduce(
+        (accumulator: any, test) => {
+          return accumulator + (test.price || 0);
+        },
+        0
+      );
+    }
+
+    total += Object.values(selectedLabTest).reduce((accumulator: any, test) => {
+      return accumulator + (test.price || 0);
+    }, 0);
+
+    return total.toFixed(2);
+  };
+
   const total = Object.values(selectedLabTest).reduce(
     (accumulator: any, test) => {
       return accumulator + (test.price || 0);
@@ -146,6 +168,35 @@ const PreviewModal: React.FC<PreviewProps> = ({
                 </Grid>
               </>
             ))}
+          {selectedXrayTests &&
+            selectedXrayTests?.map((d: any) => (
+              <>
+                <Grid item xs={12} md={6}>
+                  <Typography
+                    textAlign={"left"}
+                    sx={{
+                      color: "black",
+                      fontSize: "15px",
+                      fontWeight: "normal",
+                    }}
+                  >
+                    {d.name}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography
+                    textAlign={"right"}
+                    sx={{
+                      color: "black",
+                      fontSize: "15px",
+                      fontWeight: "normal",
+                    }}
+                  >
+                    {d.price.toFixed(2)}
+                  </Typography>
+                </Grid>
+              </>
+            ))}
           <Grid item xs={12} md={12}>
             * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
             * * * * * * * * * * * * * * * * * *
@@ -171,7 +222,7 @@ const PreviewModal: React.FC<PreviewProps> = ({
                 fontWeight: "bold",
               }}
             >
-              ₱{formattedTotal}
+              ₱{getTotal()}
             </Typography>
           </Grid>
           <Grid item xs={12} md={12}>

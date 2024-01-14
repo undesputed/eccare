@@ -14,6 +14,8 @@ import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import PrintContent from "./component/printContent";
 import SelectField from "../components/SelectField/SelectField";
+import ec_care_patientXrayTest from "../entity/ec_care_patientXrayTest";
+import ec_care_xrayTest from "../entity/ec_care_xrayTest";
 
 interface PrintResultProp {
   handleOnback: () => void;
@@ -23,6 +25,8 @@ interface PrintResultProp {
   patient: any;
   paperSize: string;
   medTech: number;
+  patientXrayTests: ec_care_patientXrayTest[];
+  xrayTests: ec_care_xrayTest[];
 }
 
 const PrintResultComponent: React.FC<PrintResultProp> = ({
@@ -33,6 +37,8 @@ const PrintResultComponent: React.FC<PrintResultProp> = ({
   patient,
   paperSize,
   medTech,
+  patientXrayTests,
+  xrayTests,
 }) => {
   return (
     <>
@@ -144,7 +150,12 @@ const PrintResultComponent: React.FC<PrintResultProp> = ({
         alignItems={"center"}
         flexDirection={"column"}
       >
-        <PrintContent contentRef={componentRef} patient={patient} />
+        <PrintContent
+          contentRef={componentRef}
+          patient={patient}
+          patientXrayTests={patientXrayTests}
+          xrayTests={xrayTests}
+        />
       </Box>
     </>
   );

@@ -1,7 +1,7 @@
 export class ec_care_patient {
   id: number | null | undefined;
   fullName: string | null | undefined;
-  birthday: string | null | undefined;
+  birthday: Date | string | null | undefined;
   age: number | null | undefined;
   gender: string | null | undefined;
   dateOfVisit: Date | string | null | undefined;

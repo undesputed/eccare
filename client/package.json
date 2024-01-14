@@ -72,6 +72,7 @@
     "redux-thunk": "^2.4.2",
     "slick-carousel": "^1.8.1",
     "styled-components": "^5.3.11",
-    "styled-icons": "^10.47.0"
+    "styled-icons": "^10.47.0",
+    "xlsx": "^0.18.5"
   }
 }

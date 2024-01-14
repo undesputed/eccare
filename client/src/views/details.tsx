@@ -1,7 +1,7 @@
 import React from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SendIcon from "@mui/icons-material/Send";
-import { Paper, Box, Typography, Button, Grid } from "@mui/material";
+import { Paper, Box, Typography, Button, Grid, TextField } from "@mui/material";
 import { ec_care_patient } from "../entity/ec_care_patient";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
@@ -19,6 +19,10 @@ import AddIcon from "@mui/icons-material/Add";
 import TextFieldComponent from "../components/TextField/textField";
 import DialogComponent from "../components/Dialog/Dialog";
 import AddTest from "../pages/patient/addTest/addTest";
+import SaveIcon from "@mui/icons-material/Save";
+import ec_care_patientXrayTest from "../entity/ec_care_patientXrayTest";
+import ec_care_xrayTest from "../entity/ec_care_xrayTest";
+import SelectField from "../components/SelectField/SelectField";
 
 interface DetailProps {
   handleOnProceed: () => void;
@@ -29,6 +33,14 @@ interface DetailProps {
   handleAddTestSubmit: () => void;
   handleOnSubmitAddTests: (id: GridRowId) => void;
   handleOnRemoveTest: (id: GridRowId) => void;
+  handleXrayTestOnSelect: (selection: any) => void;
+  handleXrayTestOnChangeResult: (event: any, id: number) => void;
+  handleXrayTestOnChangeDesc: (event: any, id: number) => void;
+  handleXrayRecord: () => void;
+  handleOnRemoveXrayTest: (id: any) => void;
+  patientXrayTests: ec_care_patientXrayTest[];
+  selectedPatientXrayTest: ec_care_patientXrayTest;
+  xrayTests: ec_care_xrayTest[];
   patientDetail: ec_care_patient;
   patientLabTests: ec_care_labTest[];
   labTest: ec_care_labTest[];
@@ -46,6 +58,14 @@ const PatientDetailsComponent: React.FC<DetailProps> = ({
   handleAddTestSubmit,
   handleOnSubmitAddTests,
   handleOnRemoveTest,
+  handleXrayTestOnSelect,
+  handleXrayTestOnChangeResult,
+  handleXrayTestOnChangeDesc,
+  handleXrayRecord,
+  handleOnRemoveXrayTest,
+  selectedPatientXrayTest,
+  xrayTests,
+  patientXrayTests,
   labTest,
   patientDetail,
   patientLabTests,
@@ -83,6 +103,44 @@ const PatientDetailsComponent: React.FC<DetailProps> = ({
           <GridActionsCellItem
             icon={<DeleteIcon />}
             onClick={() => handleOnRemoveTest(id)}
+            label="Delete"
+            color="inherit"
+          />,
+        ];
+      },
+    },
+  ];
+
+  const xrayCol: GridColDef[] = [
+    {
+      field: "id",
+      headerName: "ID",
+      width: 50,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "name",
+      headerName: "Test Name",
+      width: 200,
+      align: "left",
+      headerAlign: "left",
+      renderCell(params) {
+        return <strong>{params.row.name.toUpperCase()}</strong>;
+      },
+    },
+    { field: "price", headerName: "Price", width: 100 },
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "Actions",
+      width: 100,
+      cellClassName: "actions",
+      getActions: ({ id, row }) => {
+        return [
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            onClick={() => handleOnRemoveXrayTest(id)}
             label="Delete"
             color="inherit"
           />,
@@ -278,10 +336,24 @@ const PatientDetailsComponent: React.FC<DetailProps> = ({
                 width: "13rem",
                 borderRadius: 0,
                 border: "1px solid #20679f",
+                mr: 1,
+              }}
+              color="secondary"
+              endIcon={<AddIcon />}
+              onClick={handleAddtest}
+            >
+              ADD IMAGING TEST
+            </Button>
+            <Button
+              sx={{
+                height: "30px",
+                width: "13rem",
+                borderRadius: 0,
+                border: "1px solid #20679f",
                 color: "#1382c5",
                 ml: 1,
               }}
-              endIcon={<SaveAltIcon />}
+              endIcon={<SaveIcon />}
               onClick={() => handleTestSubmit()}
             >
               RECORD RESULT
@@ -348,6 +420,143 @@ const PatientDetailsComponent: React.FC<DetailProps> = ({
                     </Grid>
                   </>
                 ))
+              ) : (
+                <>
+                  <Grid item xs={12} md={12}>
+                    <Typography textAlign={"center"}>
+                      Please Select a Test
+                    </Typography>
+                  </Grid>
+                </>
+              )}
+            </Grid>
+          </Box>
+        </Box>
+        <hr style={{ margin: "20px 0", backgroundColor: "gray" }} />
+        <Box
+          position={"relative"}
+          m={2}
+          display={"flex"}
+          flexDirection={"row"}
+          justifyContent={"space-between"}
+        >
+          <Typography
+            variant="h4"
+            component={"h3"}
+            color={"black"}
+            alignContent={"center"}
+          >
+            IMAGING LABORATORY TESTS
+          </Typography>
+          <div>
+            <Button
+              sx={{
+                height: "30px",
+                width: "14rem",
+                borderRadius: 0,
+                border: "1px solid #20679f",
+                color: "#1382c5",
+                ml: 1,
+              }}
+              endIcon={<SaveIcon />}
+              onClick={() => handleXrayRecord()}
+            >
+              RECORD XRAY RESULT
+            </Button>
+          </div>
+        </Box>
+        <Box
+          position={"relative"}
+          mt={2}
+          width={"100%"}
+          display={"flex"}
+          flexDirection={"row"}
+          mb={10}
+        >
+          <Box width={"40%"} position={"relative"}>
+            <DataGrid
+              rows={xrayTests ? xrayTests : []}
+              columns={xrayCol}
+              initialState={{
+                pagination: {
+                  paginationModel: { page: 0, pageSize: 5 },
+                },
+              }}
+              pageSizeOptions={[2, 10, 20]}
+              sx={{
+                borderRadius: 0,
+              }}
+              rowHeight={35}
+              onRowSelectionModelChange={handleXrayTestOnSelect}
+            />
+          </Box>
+          <Box
+            width={"60%"}
+            position={"relative"}
+            py={2}
+            px={5}
+            border={"1px solid #ccc"}
+          >
+            <Typography
+              textAlign={"center"}
+              fontWeight={"bold"}
+              sx={{
+                fontSize: "18px",
+                mb: 2,
+              }}
+            >
+              IMAGING TEST FIELDS
+            </Typography>
+            <Grid container spacing={2}>
+              {selectedPatientXrayTest ? (
+                <>
+                  <Grid item xs={12} md={12}>
+                    <TextField
+                      id="filled-multiline-flexible"
+                      multiline
+                      placeholder="PATIENT ID NO."
+                      maxRows={10}
+                      fullWidth
+                      value={selectedPatientXrayTest.idNum}
+                      variant="outlined"
+                      disabled
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={12}>
+                    <SelectField
+                      label="Result"
+                      width={"100%"}
+                      labelSize={"15px"}
+                      backgroundColor="#fefefe"
+                      items={["NORMAL", "NOT NORMAL"]}
+                      value={selectedPatientXrayTest.result}
+                      name="gender"
+                      onChange={(e: any) =>
+                        handleXrayTestOnChangeResult(
+                          e,
+                          selectedPatientXrayTest.id
+                        )
+                      }
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={12}>
+                    <TextField
+                      id="filled-multiline-flexible"
+                      multiline
+                      placeholder="DESCRIPTION"
+                      maxRows={10}
+                      fullWidth
+                      value={selectedPatientXrayTest.description}
+                      variant="outlined"
+                      onChange={(e) =>
+                        handleXrayTestOnChangeDesc(
+                          e,
+                          selectedPatientXrayTest.id
+                        )
+                      }
+                    />
+                  </Grid>
+                </>
               ) : (
                 <>
                   <Grid item xs={12} md={12}>

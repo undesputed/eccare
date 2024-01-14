@@ -11,12 +11,15 @@ import {
   savePatient,
   savePatientLabTest,
   savePatientLabTestField,
+  savePatientXrayTest,
   setAge,
   setError,
   setModal,
   setPatientInfo,
   setPatientLabTest,
+  setPatientXrayTests,
   setSelectedLabTest,
+  setSelectedXrayTests,
 } from "../../reducers/dashboard/dashboardSlice";
 import ec_care_patientLabTest from "../../entity/ec_care_patientLabTest";
 import { useNavigate } from "react-router-dom";
@@ -27,6 +30,8 @@ import {
   openSnackBar,
 } from "../../reducers/global/globalSlice";
 import ec_care_labTest from "../../entity/ec_care_labTest";
+import ec_care_xrayTest from "../../entity/ec_care_xrayTest";
+import ec_care_patientXrayTest from "../../entity/ec_care_patientXrayTest";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -47,6 +52,15 @@ const Dashboard = () => {
   );
   const selectedLabTest = useAppSelector(
     (state: RootState) => state.dashboard.selectedLabTest
+  );
+  const xrayTests = useAppSelector(
+    (state: RootState) => state.dashboard.xrayTests
+  );
+  const patientXrayTest = useAppSelector(
+    (state: RootState) => state.dashboard.patientXrayTests
+  );
+  const selectedXrayTests = useAppSelector(
+    (state: RootState) => state.dashboard.selectedXrayTests
   );
 
   const fullNameRef = useRef<HTMLInputElement>();
@@ -125,6 +139,49 @@ const Dashboard = () => {
     dispatch(setPatientLabTest(params));
   };
 
+  const handleOnSelectXrayTest = (selection: any) => {
+    let patientParams: ec_care_patientXrayTest[] = [];
+    let selectedXrayTest: ec_care_xrayTest[] = [];
+    selection?.map((d) => {
+      const newParams: ec_care_patientXrayTest = {
+        id: null,
+        lms_patient_id: null,
+        lms_xrayTest_id: d,
+        result: "NORMAL",
+        idNum: generateIdNum(d),
+        description: `PA view of the chest reveals the lungs are clear.
+        Pulmonary structure is and shows vascular markings.
+        The mediastinum is centered and of normal width.
+        The tracheal air shadow is midline.
+        The cardiac size and configuration are within normal
+        limits.
+        Both hemidiaphragms and costophrenic angles are sharp
+        and intact.
+        The visualized osseous thoracic cage shows no bony
+        abnormality.`,
+        testDate: new Date(),
+        status: 0,
+        created_at: null,
+        updated_at: null,
+      };
+
+      const findXrayTest = xrayTests.find((e: any) => e.id === d);
+      patientParams.push(newParams);
+      selectedXrayTest.push(findXrayTest);
+    });
+
+    dispatch(setSelectedXrayTests(selectedXrayTest));
+    dispatch(setPatientXrayTests(patientParams));
+  };
+
+  const generateIdNum = (id: number) => {
+    const getDay = new Date(patient.dateOfVisit);
+    const year = getDay.getUTCFullYear();
+    const month = getDay.getUTCMonth() + 1;
+    const day = getDay.getUTCDate();
+    return month + "" + day + "" + year + "" + id;
+  };
+
   const handlePreview = async () => {
     const onErrorParams = {
       message: "",
@@ -133,20 +190,17 @@ const Dashboard = () => {
       field: "",
       open: true,
     };
-
     if (patient.fullName === null || patient.fullName === "") {
       onErrorParams.message = "FullName field is Required!!!";
       dispatch(openSnackBar(onErrorParams));
       dispatch(setError(true));
       return;
     }
-
-    if (patientLabTest.length === 0) {
+    if (patientLabTest.length === 0 && selectedXrayTests.length === 0) {
       onErrorParams.message = "Please Select Tests!!!";
       dispatch(openSnackBar(onErrorParams));
       return;
     }
-
     onErrorParams.type = "success";
     dispatch(openSnackBar(onErrorParams));
     dispatch(setError(false));
@@ -157,9 +211,17 @@ const Dashboard = () => {
     try {
       const res: any = await dispatch(savePatient(patient));
       if (res.type === "dashboard/savePatient/fulfilled") {
+        const patientXray = patientXrayTest?.map((item: any) => {
+          return { ...item, lms_patient_id: res.payload.id };
+        });
         const updatedPatientTestField = patientLabTest?.map((d: any) => {
           return { ...d, lms_patient_id: res.payload.id };
         });
+        // Save into lms_patient_xrayTest
+        patientXray.map(async (d: ec_care_patientXrayTest) => {
+          await dispatch(savePatientXrayTest(d));
+        });
+
         // Save into lms_patient_labTest
         updatedPatientTestField.map(async (d: ec_care_patientLabTest) => {
           const response: any = await dispatch(savePatientLabTest(d));
@@ -201,6 +263,9 @@ const Dashboard = () => {
         handleOnSelect={handleOnSelect}
         handleModal={handleModal}
         handleModalSubmit={handleSubmit}
+        handleOnSelectXrayTest={handleOnSelectXrayTest}
+        selectedXrayTests={selectedXrayTests}
+        xrayTests={xrayTests}
         selectedLabTest={selectedLabTest}
         labTests={labTests}
         patientLabTest={patientLabTest}

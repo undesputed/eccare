@@ -9,6 +9,8 @@ import {
   fetchLabTestNotByPatient,
   fetchPatientById,
   fetchPatientDetailsById,
+  fetchPatientXrayTestsByPatient,
+  fetchXrayTestByPatient,
   onUpdateModal,
   removeLabTestByPatient,
   removeLabTestFieldByPatient,
@@ -23,6 +25,16 @@ import {
   fetchAllPatient,
   openSnackBar,
 } from "../../reducers/global/globalSlice";
+import * as XLSX from "xlsx";
+import { ec_care_patient } from "../../entity/ec_care_patient";
+import {
+  savePatient,
+  savePatientLabTest,
+  savePatientLabTestField,
+  savePatientXrayTest,
+} from "../../reducers/dashboard/dashboardSlice";
+import ec_care_patientLabTest from "../../entity/ec_care_patientLabTest";
+import ec_care_patientLabTestField from "../../entity/ec_care_patientLabTestField";
 
 const Patient = () => {
   const navigate = useNavigate();
@@ -35,6 +47,150 @@ const Patient = () => {
   const updateModal = useAppSelector(
     (state: RootState) => state.patient.patientUpdateModal
   );
+  const labTestField = useAppSelector(
+    (state: RootState) => state.labTest.labTestField
+  );
+
+  const handleFileChange = (e: any) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: "array" });
+
+      // Assuming you have a single sheet in the workbook
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+
+      const patientList: ec_care_patient[] = [];
+      // Extract data from the sheet
+      const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 2 });
+      jsonData.map((d: any) => {
+        const patientParams: ec_care_patient = {
+          id: null,
+          fullName: d.FULLNAME,
+          birthday: new Date((d.BIRTHDATE - 1) * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
+          age: d.AGE,
+          gender: null,
+          dateOfVisit: new Date().toISOString().split("T")[0],
+          email: null,
+          phone: null,
+          company: null,
+          status: null,
+        };
+        patientList.push(patientParams);
+      });
+
+      handleSaveImported(patientList);
+    };
+
+    reader.readAsArrayBuffer(file);
+  };
+
+  const generateIdNum = (id: number) => {
+    const getDay = new Date();
+    const year = getDay.getUTCFullYear();
+    const month = getDay.getUTCMonth() + 1;
+    const day = getDay.getUTCDate();
+    return month + "" + day + "" + year + "" + id;
+  };
+
+  const handleSaveImported = (patientList: ec_care_patient[]) => {
+    try {
+      const labTest = [
+        {
+          id: null,
+          lms_patient_id: null,
+          lms_labTest_id: 1,
+          status: null,
+          created_at: null,
+          updated_at: null,
+        },
+        {
+          id: null,
+          lms_patient_id: null,
+          lms_labTest_id: 2,
+          status: null,
+          created_at: null,
+          updated_at: null,
+        },
+        {
+          id: null,
+          lms_patient_id: null,
+          lms_labTest_id: 3,
+          status: null,
+          created_at: null,
+          updated_at: null,
+        },
+        {
+          id: null,
+          lms_patient_id: null,
+          lms_labTest_id: 10,
+          status: null,
+          created_at: null,
+          updated_at: null,
+        },
+      ];
+      const xrayTest = {
+        id: null,
+        lms_patient_id: null,
+        lms_xrayTest_id: 2,
+        result: "NORMAL CHEST",
+        idNum: null,
+        description: `PA view of the chest reveals the lungs are clear.
+        Pulmonary structure is and shows vascular markings.
+        The mediastinum is centered and of normal width.
+        The tracheal air shadow is midline.
+        The cardiac size and configuration are within normal
+        limits.
+        Both hemidiaphragms and costophrenic angles are sharp
+        and intact.
+        The visualized osseous thoracic cage shows no bony
+        abnormality.`,
+        testDate: new Date(),
+        status: 0,
+        created_at: null,
+        updated_at: null,
+      };
+      patientList.map(async (d: any) => {
+        const res: any = await dispatch(savePatient(d));
+        if (res.type === "dashboard/savePatient/fulfilled") {
+          const updatedPatientTestField = labTest?.map((d: any) => {
+            return { ...d, lms_patient_id: res.payload.id };
+          });
+          xrayTest.lms_patient_id = res.payload.id;
+          await dispatch(savePatientXrayTest(xrayTest));
+
+          updatedPatientTestField.map(async (d: ec_care_patientLabTest) => {
+            const response: any = await dispatch(savePatientLabTest(d));
+            if (response.type === "dashboard/savePatientLabTest/fulfilled") {
+              const findLabTestField: any = labTestField.filter(
+                (item) => item.lms_labTest_id === d.lms_labTest_id
+              );
+              findLabTestField.map(async (i) => {
+                const par: ec_care_patientLabTestField = {
+                  id: null,
+                  lms_patient_labTest_id: response.payload.id,
+                  lms_labTest_field_id: i.id,
+                  result: null,
+                  status: null,
+                  created_at: null,
+                  updated_at: null,
+                };
+                await dispatch(savePatientLabTestField(par));
+              });
+            }
+          });
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleOnDelete = async (id: any) => {
     const confirm = window.confirm(
@@ -137,6 +293,8 @@ const Patient = () => {
       await dispatch(fetchLabTestByPatient(id));
       await dispatch(fetchPatientDetailsById(id));
       await dispatch(fetchLabTestNotByPatient(id));
+      await dispatch(fetchPatientXrayTestsByPatient(id));
+      await dispatch(fetchXrayTestByPatient(id));
       navigate(`/patient/detail?id=${id}`);
     } catch (err) {
       console.log(err);
@@ -161,6 +319,7 @@ const Patient = () => {
         handleOnEdit={handleOnEdit}
         handleOnChange={handleOnChange}
         handleOnDelete={handleOnDelete}
+        handleFileChange={handleFileChange}
         patients={patients}
         updateModal={updateModal}
         patientInfo={patientInfo}

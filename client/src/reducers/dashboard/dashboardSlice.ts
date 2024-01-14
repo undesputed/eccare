@@ -6,6 +6,10 @@ import ec_care_patientLabTest from "../../entity/ec_care_patientLabTest";
 import { createPatientLabTest } from "../../api/patientLabTestAPI";
 import ec_care_patientLabTestField from "../../entity/ec_care_patientLabTestField";
 import { createPatientLabTestField } from "../../api/patientLabTestField";
+import { createXrayTest, getAllXrayTest } from "../../api/xrayTestAPI";
+import ec_care_xrayTest from "../../entity/ec_care_xrayTest";
+import { createPatientXrayTest } from "../../api/patientXrayTestAPI";
+import ec_care_patientXrayTest from "../../entity/ec_care_patientXrayTest";
 
 const initialState: DashboardType = {
   patients: [],
@@ -23,11 +27,22 @@ const initialState: DashboardType = {
   },
   patientLabTest: [],
   selectedLabTest: [],
+  xrayTests: [],
+  selectedXrayTests: [],
+  patientXrayTests: [],
   isModalOpen: false,
   isError: false,
   status: "idle",
   error: null,
 };
+
+export const fetchAllXrayTest = createAsyncThunk(
+  "dashboard/fetchAllXrayTest",
+  async () => {
+    const response = await getAllXrayTest();
+    return response;
+  }
+);
 
 export const savePatient = createAsyncThunk(
   "dashboard/savePatient",
@@ -49,6 +64,22 @@ export const savePatientLabTestField = createAsyncThunk(
   "dashboard/savePatientLabTestField",
   async (newPatientLabTestField: ec_care_patientLabTestField) => {
     const response = await createPatientLabTestField(newPatientLabTestField);
+    return response;
+  }
+);
+
+export const saveXrayTest = createAsyncThunk(
+  "dashboard/saveXrayTest",
+  async (xrayTest: ec_care_xrayTest) => {
+    const response = await createXrayTest(xrayTest);
+    return response;
+  }
+);
+
+export const savePatientXrayTest = createAsyncThunk(
+  "dashboard/savePatientXrayTest",
+  async (newPatientXrayTest: ec_care_patientXrayTest) => {
+    const response = await createPatientXrayTest(newPatientXrayTest);
     return response;
   }
 );
@@ -100,12 +131,20 @@ const dashboardSlice = createSlice({
         status: null,
       };
       state.patientLabTest = [];
+      state.selectedLabTest = [];
+      state.selectedXrayTests = [];
     },
     setModal: (state) => {
       state.isModalOpen = !state.isModalOpen;
     },
     setSelectedLabTest: (state, action) => {
       state.selectedLabTest = action.payload;
+    },
+    setSelectedXrayTests: (state, action) => {
+      state.selectedXrayTests = action.payload;
+    },
+    setPatientXrayTests: (state, action) => {
+      state.patientXrayTests = action.payload;
     },
   },
   extraReducers(builder) {
@@ -137,6 +176,34 @@ const dashboardSlice = createSlice({
       })
       .addCase(savePatientLabTestField.rejected, (state) => {
         state.status = "rejected";
+      })
+      .addCase(saveXrayTest.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(saveXrayTest.fulfilled, (state) => {
+        state.status = "succeeded";
+      })
+      .addCase(saveXrayTest.rejected, (state) => {
+        state.status = "rejected";
+      })
+      .addCase(fetchAllXrayTest.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchAllXrayTest.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.xrayTests = action.payload;
+      })
+      .addCase(fetchAllXrayTest.rejected, (state) => {
+        state.status = "rejected";
+      })
+      .addCase(savePatientXrayTest.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(savePatientXrayTest.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(savePatientXrayTest.rejected, (state) => {
+        state.status = "rejected";
       });
   },
 });
@@ -150,5 +217,7 @@ export const {
   clean,
   setModal,
   setSelectedLabTest,
+  setSelectedXrayTests,
+  setPatientXrayTests,
 } = dashboardSlice.actions;
 export default dashboardSlice.reducer;

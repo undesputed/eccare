@@ -17,6 +17,7 @@ import {
 } from "./reducers/global/globalSlice";
 import SnackBarComponent from "./components/Snackbar/SnackBar";
 import BackDropComponent from "./components/Backdrop/Backdrop";
+import { fetchAllXrayTest } from "./reducers/dashboard/dashboardSlice";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -73,10 +74,19 @@ const App = () => {
       }
     };
 
+    const getAllXrayTests = async () => {
+      try {
+        await dispatch(fetchAllXrayTest());
+      } catch (err) {
+        console.log("Error Retrieving All Patient!!", err);
+      }
+    };
+
     getAllFields();
     getAllLabTests();
     getAllLabTestField();
     getAllPatient();
+    getAllXrayTests();
   }, []);
 
   return (

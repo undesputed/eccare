@@ -4,20 +4,26 @@ import { useAppDispatch, useAppSelector } from "../../../actions/hooks";
 import { RootState } from "../../../app/store";
 import { useNavigate } from "react-router-dom";
 import {
+  editPatientXrayTest,
   fetchLabTestByPatient,
   fetchLabTestByPatientAndTest,
   fetchLabTestFieldByPatient,
   fetchLabTestNotByPatient,
   fetchPatientById,
   fetchPatientDetailsById,
+  fetchPatientXrayTestsByPatient,
+  fetchXrayTestByPatient,
   handleOnChangeResult,
   openAddTestModal,
   removePatientLabTest,
   removePatientLabTestField,
+  removePatientXrayTest,
   setFieldToPatient,
   setLoading,
   setPatientDetails,
   setPatientId,
+  setPatientXrayTest,
+  setSelectedPatientXrayTest,
   setTestId,
   updatePatientLabTestField,
 } from "../../../reducers/patient/patientSlice";
@@ -57,6 +63,15 @@ const PatientDetails = () => {
   const labTestField = useAppSelector(
     (state: RootState) => state.labTest.labTestField
   );
+  const patientXrayTests = useAppSelector(
+    (state: RootState) => state.patient.pattientXrayTests
+  );
+  const xrayTests = useAppSelector(
+    (state: RootState) => state.patient.xrayTests
+  );
+  const selectedPatientXrayTest = useAppSelector(
+    (state: RootState) => state.patient.selectedPatientXrayTest
+  );
 
   const handleAddtest = () => {
     dispatch(openAddTestModal());
@@ -64,6 +79,39 @@ const PatientDetails = () => {
 
   const handleAddTestSubmit = () => {
     console.log("HEllo world");
+  };
+
+  const handleXrayTestOnChangeResult = (event: any, id: number) => {
+    const findXrayTest = patientXrayTests?.map((d: any) =>
+      d.id === id ? { ...d, result: event.target.value } : d
+    );
+    const find = findXrayTest.find((d: any) => d.lms_xrayTest_id === id);
+
+    dispatch(setSelectedPatientXrayTest(find));
+    dispatch(setPatientXrayTest(findXrayTest));
+  };
+
+  const handleXrayTestOnChangeDesc = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    id: number
+  ) => {
+    const { value } = event.target;
+    const find = patientXrayTests?.map((d: any) =>
+      d.id === id ? { ...d, description: value } : d
+    );
+    const findXrayTest = find.find((d: any) => d.lms_xrayTest_id === id);
+
+    dispatch(setSelectedPatientXrayTest(findXrayTest));
+    dispatch(setPatientXrayTest(find));
+  };
+
+  const handleXrayTestOnSelect = (selection: any) => {
+    const testId = selection[0];
+    const findXrayTest = patientXrayTests.find(
+      (d: any) => d.lms_xrayTest_id === testId
+    );
+
+    dispatch(setSelectedPatientXrayTest(findXrayTest));
   };
 
   const onSelectTest = async (selection: any) => {
@@ -248,6 +296,25 @@ const PatientDetails = () => {
     }
   };
 
+  const handleOnRemoveXrayTest = async (id: number) => {
+    try {
+      const onErrorParams = {
+        message: "",
+        type: "Error",
+        key: 0,
+        field: "",
+        open: true,
+      };
+      await dispatch(removePatientXrayTest(id));
+      fetchPatientDetails();
+      onErrorParams.message = "Xray Test Removed Successfully!!!";
+      onErrorParams.type = "success";
+      dispatch(openSnackBar(onErrorParams));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const handleOnRemoveTest = async (testId: any) => {
     try {
       const params = {
@@ -286,13 +353,40 @@ const PatientDetails = () => {
     navigate(`/patient/print?id=${patient.id}`);
   };
 
+  const handleXrayRecord = async () => {
+    try {
+      const onErrorParams = {
+        message: "",
+        type: "Error",
+        key: 0,
+        field: "",
+        open: true,
+      };
+      await dispatch(editPatientXrayTest(patientXrayTests));
+      onErrorParams.message = "Patient Results Saved!!!";
+      onErrorParams.type = "success";
+      dispatch(openSnackBar(onErrorParams));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const handleTestSubmit = () => {
     try {
+      const onErrorParams = {
+        message: "",
+        type: "Error",
+        key: 0,
+        field: "",
+        open: true,
+      };
       patient.testFields?.map(async (d: any) => {
         const result = d.labTestFields;
         await dispatch(updatePatientLabTestField(result));
       });
-      alert("Results Recorded!!");
+      onErrorParams.message = "Patient Results Saved!!!";
+      onErrorParams.type = "success";
+      dispatch(openSnackBar(onErrorParams));
     } catch (err) {
       console.log("Error updating Patient Results", err);
     }
@@ -305,6 +399,8 @@ const PatientDetails = () => {
       await dispatch(fetchLabTestByPatient(id));
       await dispatch(fetchPatientDetailsById(id));
       await dispatch(fetchLabTestNotByPatient(id));
+      await dispatch(fetchPatientXrayTestsByPatient(id));
+      await dispatch(fetchXrayTestByPatient(id));
     } catch (err) {
       console.log(err);
     }
@@ -327,6 +423,14 @@ const PatientDetails = () => {
         handleAddTestSubmit={handleAddTestSubmit}
         handleOnSubmitAddTests={handleOnSubmitAddTests}
         handleOnRemoveTest={handleOnRemoveTest}
+        handleXrayTestOnSelect={handleXrayTestOnSelect}
+        handleXrayTestOnChangeResult={handleXrayTestOnChangeResult}
+        handleXrayTestOnChangeDesc={handleXrayTestOnChangeDesc}
+        handleXrayRecord={handleXrayRecord}
+        handleOnRemoveXrayTest={handleOnRemoveXrayTest}
+        selectedPatientXrayTest={selectedPatientXrayTest}
+        xrayTests={xrayTests}
+        patientXrayTests={patientXrayTests}
         patientLabTests={patientLabTests}
         patientDetail={patientDetail}
         patientLabTestField={patientLabTestField}
