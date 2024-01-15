@@ -50,7 +50,7 @@ export default class PatientLabTest {
         lms_labTest.*
         from lms_patient_labTest
         left join lms_patient on lms_patient.id = lms_patient_labTest.lms_patient_id
-        left join lms_labTest on lms_labtest.id = lms_patient_labTest.lms_labTest_id
+        left join lms_labTest on lms_labTest.id = lms_patient_labTest.lms_labTest_id
         where lms_patient.id = ${patientId}
        `,
         (err, res: any) => {
