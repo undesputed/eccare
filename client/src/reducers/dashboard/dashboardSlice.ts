@@ -24,6 +24,8 @@ const initialState: DashboardType = {
     phone: null,
     company: null,
     status: null,
+    created_at: null,
+    updated_at: null,
   },
   patientLabTest: [],
   selectedLabTest: [],
@@ -106,6 +108,8 @@ const dashboardSlice = createSlice({
         phone: null,
         company: null,
         status: null,
+        created_at: null,
+        updated_at: null,
       };
     },
     setAge: (state, action) => {
@@ -129,6 +133,8 @@ const dashboardSlice = createSlice({
         phone: null,
         company: null,
         status: null,
+        created_at: null,
+        updated_at: null,
       };
       state.patientLabTest = [];
       state.selectedLabTest = [];

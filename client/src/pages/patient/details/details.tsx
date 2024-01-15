@@ -346,7 +346,6 @@ const PatientDetails = () => {
     } catch (err) {
       console.log(err);
     }
-    console.log(testId);
   };
 
   const handleOnProceed = () => {

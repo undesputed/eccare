@@ -9,6 +9,8 @@ export class ec_care_patient {
   phone: number | null | undefined;
   company: string | null | undefined;
   status: number | null | undefined;
+  created_at: Date | string | null | undefined;
+  updated_at: Date | string | null | undefined;
 
   constructor(patient: Partial<ec_care_patient>) {
     this.id = patient.id;

@@ -58,6 +58,34 @@ export default class Patient {
     });
   }
 
+  static async bulkCreate(newPatients: Patient[]): Promise<any | null> {
+    return new Promise((resolve, reject) => {
+      const values = newPatients.map((patient) => [
+        patient.fullName,
+        patient.birthday,
+        patient.age,
+        patient.gender,
+        patient.dateOfVisit,
+        patient.email,
+        patient.phone,
+        patient.company,
+        patient.status,
+        patient.created_at,
+        patient.updated_at,
+      ]);
+      const query = `INSERT INTO lms_patient (fullName, birthday, age, gender, dateOfVisit, email, phone, company, status, created_at, updated_at) VALUES ? `;
+
+      sql.query(query, [values], (err, res: any) => {
+        if (err) {
+          console.log(err);
+          reject(new DatabaseQueryError("Error Created all this Patient"));
+        } else {
+          resolve(res);
+        }
+      });
+    });
+  }
+
   static async select(): Promise<Patient[] | null> {
     return new Promise((resolve, reject) => {
       sql.query(

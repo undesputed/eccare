@@ -21,6 +21,14 @@ export function createPatient(
   return API.post<ec_care_patient>(`patient`, patient).then((res) => res.data);
 }
 
+export function bulkCreatePatient(
+  newPatient: ec_care_patient[]
+): Promise<ec_care_patient[]> {
+  return API.post<ec_care_patient[]>(`patient/bulkUpload`, newPatient).then(
+    (res) => res.data
+  );
+}
+
 // Update
 export function updatePatient(
   patient: ec_care_patient

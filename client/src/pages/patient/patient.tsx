@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../actions/hooks";
 import { RootState } from "../../app/store";
 import { GridRowId } from "@mui/x-data-grid";
 import {
+  bulkAddPatient,
   clearFields,
   fetchLabTestByPatient,
   fetchLabTestNotByPatient,
@@ -16,6 +17,7 @@ import {
   removeLabTestFieldByPatient,
   removePatientById,
   setAge,
+  setLoading,
   setPatientId,
   setPatientInfo,
   updatePatientInfo,
@@ -24,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 import {
   fetchAllPatient,
   openSnackBar,
+  setBackDrop,
 } from "../../reducers/global/globalSlice";
 import * as XLSX from "xlsx";
 import { ec_care_patient } from "../../entity/ec_care_patient";
@@ -55,6 +58,26 @@ const Patient = () => {
     const file = e.target.files[0];
     if (!file) return;
 
+    const open = {
+      open: true,
+    };
+    const close = {
+      open: false,
+    };
+    const snackBar = {
+      message: "Print Result Successfull",
+      type: "success",
+      key: 0,
+      field: "",
+      open: true,
+    };
+    dispatch(setBackDrop(open));
+    setTimeout(() => {
+      dispatch(setLoading());
+      dispatch(setBackDrop(close));
+      dispatch(openSnackBar(snackBar));
+    }, 2000);
+
     const reader = new FileReader();
     reader.onload = (e: any) => {
       const data = new Uint8Array(e.target.result);
@@ -74,13 +97,15 @@ const Patient = () => {
           birthday: new Date((d.BIRTHDATE - 1) * 24 * 60 * 60 * 1000)
             .toISOString()
             .split("T")[0],
-          age: d.AGE,
-          gender: null,
+          age: d.AGE ? d.AGE : null,
+          gender: d.GENDER ? d.GENDER : null,
           dateOfVisit: new Date().toISOString().split("T")[0],
-          email: null,
-          phone: null,
-          company: null,
-          status: null,
+          email: d.EMAIL ? d.EMAIL : null,
+          phone: d.PHONE ? d.PHONE : null,
+          company: d.COMPANY ? d.COMPANY : null,
+          status: 0,
+          created_at: new Date().toISOString().split("T")[0],
+          updated_at: null,
         };
         patientList.push(patientParams);
       });
@@ -92,104 +117,99 @@ const Patient = () => {
   };
 
   const generateIdNum = (id: number) => {
-    const getDay = new Date();
-    const year = getDay.getUTCFullYear();
-    const month = getDay.getUTCMonth() + 1;
-    const day = getDay.getUTCDate();
-    return month + "" + day + "" + year + "" + id;
+    const timestamp = new Date().getTime(); // Get current timestamp
+    const randomNum = Math.floor(Math.random() * 1000); // Generate a random number between 0 and 999
+    return `${timestamp}${id}${randomNum}`;
   };
 
-  const handleSaveImported = (patientList: ec_care_patient[]) => {
+  const handleSaveImported = async (patientList: ec_care_patient[]) => {
     try {
-      const labTest = [
-        {
-          id: null,
-          lms_patient_id: null,
-          lms_labTest_id: 1,
-          status: null,
-          created_at: null,
-          updated_at: null,
-        },
-        {
-          id: null,
-          lms_patient_id: null,
-          lms_labTest_id: 2,
-          status: null,
-          created_at: null,
-          updated_at: null,
-        },
-        {
-          id: null,
-          lms_patient_id: null,
-          lms_labTest_id: 3,
-          status: null,
-          created_at: null,
-          updated_at: null,
-        },
-        {
-          id: null,
-          lms_patient_id: null,
-          lms_labTest_id: 10,
-          status: null,
-          created_at: null,
-          updated_at: null,
-        },
-      ];
-      const xrayTest = {
-        id: null,
-        lms_patient_id: null,
-        lms_xrayTest_id: 2,
-        result: "NORMAL CHEST",
-        idNum: null,
-        description: `PA view of the chest reveals the lungs are clear.
-        Pulmonary structure is and shows vascular markings.
-        The mediastinum is centered and of normal width.
-        The tracheal air shadow is midline.
-        The cardiac size and configuration are within normal
-        limits.
-        Both hemidiaphragms and costophrenic angles are sharp
-        and intact.
-        The visualized osseous thoracic cage shows no bony
-        abnormality.`,
-        testDate: new Date(),
-        status: 0,
-        created_at: null,
-        updated_at: null,
-      };
-      patientList.map(async (d: any) => {
-        const res: any = await dispatch(savePatient(d));
-        if (res.type === "dashboard/savePatient/fulfilled") {
-          const updatedPatientTestField = labTest?.map((d: any) => {
-            return { ...d, lms_patient_id: res.payload.id };
-          });
-          xrayTest.lms_patient_id = res.payload.id;
-          await dispatch(savePatientXrayTest(xrayTest));
-
-          updatedPatientTestField.map(async (d: ec_care_patientLabTest) => {
-            const response: any = await dispatch(savePatientLabTest(d));
-            if (response.type === "dashboard/savePatientLabTest/fulfilled") {
-              const findLabTestField: any = labTestField.filter(
-                (item) => item.lms_labTest_id === d.lms_labTest_id
-              );
-              findLabTestField.map(async (i) => {
-                const par: ec_care_patientLabTestField = {
-                  id: null,
-                  lms_patient_labTest_id: response.payload.id,
-                  lms_labTest_field_id: i.id,
-                  result: null,
-                  status: null,
-                  created_at: null,
-                  updated_at: null,
-                };
-                await dispatch(savePatientLabTestField(par));
-              });
-            }
-          });
-        }
-      });
+      await dispatch(bulkAddPatient(patientList));
     } catch (err) {
       console.log(err);
     }
+    // try {
+    //   const labTest = [
+    //     {
+    //       id: null,
+    //       lms_patient_id: null,
+    //       lms_labTest_id: 1,
+    //       status: null,
+    //       created_at: null,
+    //       updated_at: null,
+    //     },
+    //     {
+    //       id: null,
+    //       lms_patient_id: null,
+    //       lms_labTest_id: 2,
+    //       status: null,
+    //       created_at: null,
+    //       updated_at: null,
+    //     },
+    //     {
+    //       id: null,
+    //       lms_patient_id: null,
+    //       lms_labTest_id: 3,
+    //       status: null,
+    //       created_at: null,
+    //       updated_at: null,
+    //     },
+    //     {
+    //       id: null,
+    //       lms_patient_id: null,
+    //       lms_labTest_id: 10,
+    //       status: null,
+    //       created_at: null,
+    //       updated_at: null,
+    //     },
+    //   ];
+    //   const xrayTest = {
+    //     id: null,
+    //     lms_patient_id: null,
+    //     lms_xrayTest_id: 2,
+    //     result: "NORMAL CHEST",
+    //     idNum: null,
+    //     description: `PA view of the chest reveals the lungs are clear. Pulmonary structure is and shows vascular markings. The mediastinum is centered and of normal width. The tracheal air shadow is midline. The cardiac size and configuration are within normal limits. Both hemidiaphragms and costophrenic angles are sharp and intact. The visualized osseous thoracic cage shows no bony abnormality.`,
+    //     testDate: new Date(),
+    //     status: 0,
+    //     created_at: null,
+    //     updated_at: null,
+    //   };
+    //   patientList.map(async (d: any) => {
+    //     const res: any = await dispatch(savePatient(d));
+    //     if (res.type === "dashboard/savePatient/fulfilled") {
+    //       const updatedPatientTestField = labTest?.map((d: any) => {
+    //         return { ...d, lms_patient_id: res.payload.id };
+    //       });
+    //       xrayTest.lms_patient_id = res.payload.id;
+    //       xrayTest.idNum = generateIdNum(res.payload.id);
+    //       await dispatch(savePatientXrayTest(xrayTest));
+
+    //       updatedPatientTestField.map(async (d: ec_care_patientLabTest) => {
+    //         const response: any = await dispatch(savePatientLabTest(d));
+    //         if (response.type === "dashboard/savePatientLabTest/fulfilled") {
+    //           const findLabTestField: any = labTestField.filter(
+    //             (item) => item.lms_labTest_id === d.lms_labTest_id
+    //           );
+    //           findLabTestField.map(async (i) => {
+    //             const par: ec_care_patientLabTestField = {
+    //               id: null,
+    //               lms_patient_labTest_id: response.payload.id,
+    //               lms_labTest_field_id: i.id,
+    //               result: null,
+    //               status: null,
+    //               created_at: null,
+    //               updated_at: null,
+    //             };
+    //             await dispatch(savePatientLabTestField(par));
+    //           });
+    //         }
+    //       });
+    //     }
+    //   });
+    // } catch (err) {
+    //   console.log(err);
+    // }
   };
 
   const handleOnDelete = async (id: any) => {

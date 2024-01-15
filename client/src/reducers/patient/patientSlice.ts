@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { PatientType } from "./patient";
 import {
+  bulkCreatePatient,
   deletePatient,
   getPatientById,
   getPatientDetailsById,
@@ -41,6 +42,8 @@ const initialState: PatientType = {
     phone: null,
     company: null,
     status: null,
+    created_at: null,
+    updated_at: null,
   },
   patientLabTest: [],
   patientLabTestField: [],
@@ -151,6 +154,14 @@ export const fetchXrayTestByPatient = createAsyncThunk(
   "patient/fetchXrayTestByPatient",
   async (patientId: number) => {
     const response = await getAllXrayTestByPatient(patientId);
+    return response;
+  }
+);
+
+export const bulkAddPatient = createAsyncThunk(
+  "patient/bulkAddPatient",
+  async (newPatient: ec_care_patient[]) => {
+    const response = await bulkCreatePatient(newPatient);
     return response;
   }
 );
@@ -298,6 +309,8 @@ const patientSlice = createSlice({
         phone: null,
         company: null,
         status: null,
+        created_at: null,
+        updated_at: null,
       };
     },
   },
@@ -471,6 +484,15 @@ const patientSlice = createSlice({
         state.status = "succeeded";
       })
       .addCase(removePatientXrayTest.rejected, (state) => {
+        state.status = "rejected";
+      })
+      .addCase(bulkAddPatient.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(bulkAddPatient.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(bulkAddPatient.rejected, (state) => {
         state.status = "rejected";
       });
   },

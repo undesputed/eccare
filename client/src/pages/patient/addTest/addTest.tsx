@@ -44,7 +44,7 @@ const AddTest: React.FC<AddTestProp> = ({
       headerName: "Actions",
       width: 150,
       cellClassName: "actions",
-      getActions: ({ id, row }) => {
+      getActions: ({ id, row }: any) => {
         return [
           <GridActionsCellItem
             icon={<AddIcon />}

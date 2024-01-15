@@ -528,9 +528,9 @@ const PatientDetailsComponent: React.FC<DetailProps> = ({
                       width={"100%"}
                       labelSize={"15px"}
                       backgroundColor="#fefefe"
-                      items={["NORMAL", "NOT NORMAL"]}
+                      items={["NORMAL CHEST", "NOT NORMAL"]}
                       value={selectedPatientXrayTest.result}
-                      name="gender"
+                      name="Result"
                       onChange={(e: any) =>
                         handleXrayTestOnChangeResult(
                           e,

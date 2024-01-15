@@ -38,7 +38,7 @@ router.post(
       created_at: new Date(),
       updated_at: null,
     });
-    
+
     try {
       const createPatient: any = await Patient.create(newPatient);
       newPatient.id = createPatient.insertId;
@@ -48,5 +48,17 @@ router.post(
     }
   }
 );
+
+router.post("/api/patient/bulkUpload", async (req: Request, res: Response) => {
+  const data: Patient[] = req.body;
+
+  try {
+    const bulkCreate = await Patient.bulkCreate(data);
+    console.log(bulkCreate);
+    res.status(201).send("All Patient Imported Successfully!!!");
+  } catch (err) {
+    console.log(err);
+  }
+});
 
 export { router as createPatient };
