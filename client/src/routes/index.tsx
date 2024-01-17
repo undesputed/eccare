@@ -31,6 +31,7 @@ const PatientDetail = Loader(
 const PrintResult = Loader(
   lazy(() => import("../pages/patient/printResult/printResult"))
 );
+const MedCert = Loader(lazy(() => import("../pages/medCerts/medCerts")));
 
 //Component
 
@@ -78,6 +79,10 @@ const routes: RouteObject[] = [
         ],
       },
     ],
+  },
+  {
+    path: "medCert",
+    element: <MedCert />,
   },
 ];
 

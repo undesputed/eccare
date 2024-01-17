@@ -33,6 +33,7 @@ import { createPatientXrayTest } from "./routes/patientXrayTest/createPatientXra
 import { patientXrayTest } from "./routes/patientXrayTest/patientXrayTest";
 import { updatePatientXrayTest } from "./routes/patientXrayTest/updatePatientXrayTest";
 import { deletePatientXrayTest } from "./routes/patientXrayTest/deletePatientXrayTest";
+import { medcert } from "./routes/medCert/medCert";
 
 const app = express();
 var corsOptions = {
@@ -63,6 +64,7 @@ app.use(pkg);
 app.use(labTestPackage);
 app.use(xrayTest);
 app.use(patientXrayTest);
+app.use(medcert);
 
 // List all the Update Routes
 app.use(updatePatientLabTestField);

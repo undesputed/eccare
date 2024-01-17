@@ -11,6 +11,7 @@ import {
   fetchLabTests,
 } from "./reducers/labTest/labTestSlice";
 import {
+  fetchAllMedCert,
   fetchAllPatient,
   openSnackBar,
   setBackDrop,
@@ -82,11 +83,20 @@ const App = () => {
       }
     };
 
+    const getAllMedCerts = async () => {
+      try {
+        await dispatch(fetchAllMedCert());
+      } catch (err) {
+        console.log("Error Retrieving All Patient!!", err);
+      }
+    };
+
     getAllFields();
     getAllLabTests();
     getAllLabTestField();
     getAllPatient();
     getAllXrayTests();
+    getAllMedCerts();
   }, []);
 
   return (

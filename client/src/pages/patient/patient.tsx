@@ -94,7 +94,7 @@ const Patient = () => {
         const patientParams: ec_care_patient = {
           id: null,
           fullName: d.FULLNAME,
-          birthday: new Date((d.BIRTHDATE - 1) * 24 * 60 * 60 * 1000)
+          birthday: new Date((d.BIRTHDATE - 25569) * 86400 * 1000)
             .toISOString()
             .split("T")[0],
           age: d.AGE ? d.AGE : null,
