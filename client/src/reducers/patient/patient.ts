@@ -14,6 +14,7 @@ export type PatientType = {
   selectedPatientXrayTest: ec_care_patientXrayTest;
   pattientXrayTests: ec_care_patientXrayTest[];
   xrayTests: ec_care_xrayTest[];
+  xrayTest: ec_care_xrayTest[];
   patientForm: any;
   patientTestsFields: any[];
   patientLabTestId: number | string;
@@ -22,6 +23,7 @@ export type PatientType = {
   medTech: number;
   addTestModal: boolean;
   patientUpdateModal: boolean;
+  addImagintTestModal: boolean;
   loading: boolean;
   testId: number;
   status: string;

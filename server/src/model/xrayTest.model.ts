@@ -77,4 +77,23 @@ export default class XrayTest {
       );
     });
   }
+
+  static async selectNotByPatient(
+    patientId: number | string
+  ): Promise<XrayTest[] | null> {
+    return new Promise((resolve, reject) => {
+      sql.query(
+        `SELECT * FROM lms_xrayTest WHERE id NOT IN 
+        (select lms_xrayTest_id from lms_patient_xrayTest where lms_patient_id = ${patientId})`,
+        (err, res: any) => {
+          if (err) {
+            console.log(err);
+            reject(new DatabaseQueryError("Error Retrieving Lab Test"));
+          } else {
+            resolve(res);
+          }
+        }
+      );
+    });
+  }
 }

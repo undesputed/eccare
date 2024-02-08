@@ -105,7 +105,7 @@ const LabTestView: React.FC<LabTestProp> = ({
             >
               ADD LAB TEST
             </Button>
-            <Button
+            {/* <Button
               sx={{
                 height: "30px",
                 width: "13rem",
@@ -118,7 +118,7 @@ const LabTestView: React.FC<LabTestProp> = ({
               color="secondary"
             >
               ADD NEW PACKAGE
-            </Button>
+            </Button> */}
           </div>
         </Box>
         <Box position={"relative"} mt={2}>
@@ -164,7 +164,7 @@ const LabTestView: React.FC<LabTestProp> = ({
             LABORATORY PACKAGES
           </Typography>
         </Box>
-        <Box position={"relative"} mt={2}>
+        {/* <Box position={"relative"} mt={2}>
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
@@ -180,7 +180,7 @@ const LabTestView: React.FC<LabTestProp> = ({
               eget.
             </AccordionDetails>
           </Accordion>
-        </Box>
+        </Box> */}
       </Paper>
     </>
   );

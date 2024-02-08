@@ -13,11 +13,13 @@ import {
   fetchPatientDetailsById,
   fetchPatientXrayTestsByPatient,
   fetchXrayTestByPatient,
+  fetchXrayTestNotByPatient,
   handleOnChangeResult,
   openAddTestModal,
   removePatientLabTest,
   removePatientLabTestField,
   removePatientXrayTest,
+  setAddImagingModal,
   setFieldToPatient,
   setLoading,
   setPatientDetails,
@@ -30,10 +32,12 @@ import {
 import {
   savePatientLabTest,
   savePatientLabTestField,
+  savePatientXrayTest,
 } from "../../../reducers/dashboard/dashboardSlice";
 import ec_care_patientLabTest from "../../../entity/ec_care_patientLabTest";
 import ec_care_patientLabTestField from "../../../entity/ec_care_patientLabTestField";
 import { openSnackBar } from "../../../reducers/global/globalSlice";
+import ec_care_patientXrayTest from "../../../entity/ec_care_patientXrayTest";
 
 const PatientDetails = () => {
   const searchParams = new URLSearchParams(location.search);
@@ -72,6 +76,55 @@ const PatientDetails = () => {
   const selectedPatientXrayTest = useAppSelector(
     (state: RootState) => state.patient.selectedPatientXrayTest
   );
+  const xrayTest = useAppSelector((state: RootState) => state.patient.xrayTest);
+  const openImagingTest = useAppSelector(
+    (state: RootState) => state.patient.addImagintTestModal
+  );
+
+  const generateIdNum = (id: number) => {
+    const getDay = new Date(patient.dateOfVisit);
+    const year = getDay.getUTCFullYear();
+    const month = getDay.getUTCMonth() + 1;
+    const day = getDay.getUTCDate();
+    return month + "" + day + "" + year + "" + id;
+  };
+
+  const handleAddImagingSubmit = async (xrayTestId: any) => {
+    try {
+      const onErrorParams = {
+        message: "New Imaging Test Added!!!",
+        type: "success",
+        key: 0,
+        field: "",
+        open: true,
+      };
+      const newParams: ec_care_patientXrayTest = {
+        id: null,
+        lms_patient_id: parseInt(id),
+        lms_xrayTest_id: xrayTestId,
+        result: "NORMAL",
+        idNum: generateIdNum(xrayTestId),
+        description: `PA view of the chest reveals the lungs are clear. Pulmonary structure is and shows vascular markings. The mediastinum is centered and of normal width. The tracheal air shadow is midline. The cardiac size and configuration are within normal limits. Both hemidiaphragms and costophrenic angles are sharp and intact. The visualized osseous thoracic cage shows no bony abnormality.`,
+        testDate: new Date(),
+        status: 0,
+        created_at: null,
+        updated_at: null,
+      };
+      await dispatch(savePatientXrayTest(newParams));
+      fetchPatientDetails();
+      dispatch(openSnackBar(onErrorParams));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleOpenAddImagingTest = () => {
+    dispatch(setAddImagingModal());
+  };
+
+  const handleBackButton = () => {
+    navigate("/patient");
+  };
 
   const handleAddtest = () => {
     dispatch(openAddTestModal());
@@ -400,6 +453,7 @@ const PatientDetails = () => {
       await dispatch(fetchLabTestNotByPatient(id));
       await dispatch(fetchPatientXrayTestsByPatient(id));
       await dispatch(fetchXrayTestByPatient(id));
+      await dispatch(fetchXrayTestNotByPatient(id));
     } catch (err) {
       console.log(err);
     }
@@ -427,6 +481,11 @@ const PatientDetails = () => {
         handleXrayTestOnChangeDesc={handleXrayTestOnChangeDesc}
         handleXrayRecord={handleXrayRecord}
         handleOnRemoveXrayTest={handleOnRemoveXrayTest}
+        handleBackButton={handleBackButton}
+        handleOpenAddImagingTest={handleOpenAddImagingTest}
+        handleAddImagingSubmit={handleAddImagingSubmit}
+        openImagingTest={openImagingTest}
+        xrayTest={xrayTest}
         selectedPatientXrayTest={selectedPatientXrayTest}
         xrayTests={xrayTests}
         patientXrayTests={patientXrayTests}

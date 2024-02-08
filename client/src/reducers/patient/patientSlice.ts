@@ -19,7 +19,6 @@ import {
   getLabTestFieldByPatient,
   updateResult,
 } from "../../api/patientLabTestField";
-import { C } from "styled-icons/fa-solid";
 import { getLabTestNotByPatient } from "../../api/labTestAPI";
 import { ec_care_patient } from "../../entity/ec_care_patient";
 import {
@@ -27,7 +26,10 @@ import {
   getAllPatientXrayTestByPatient,
   updatePatientXrayTest,
 } from "../../api/patientXrayTestAPI";
-import { getAllXrayTestByPatient } from "../../api/xrayTestAPI";
+import {
+  getAllXrayTestByPatient,
+  getAllXrayTestNotByPatient,
+} from "../../api/xrayTestAPI";
 import ec_care_patientXrayTest from "../../entity/ec_care_patientXrayTest";
 
 const initialState: PatientType = {
@@ -76,6 +78,7 @@ const initialState: PatientType = {
   xrayTests: [],
   patientLabTestId: 0,
   labTest: [],
+  xrayTest: [],
   testId: 0,
   selectedTestField: null,
   patientId: 0,
@@ -83,6 +86,7 @@ const initialState: PatientType = {
   medTech: 0,
   addTestModal: false,
   patientUpdateModal: false,
+  addImagintTestModal: false,
   loading: false,
   status: "idle",
   error: null,
@@ -154,6 +158,14 @@ export const fetchXrayTestByPatient = createAsyncThunk(
   "patient/fetchXrayTestByPatient",
   async (patientId: number) => {
     const response = await getAllXrayTestByPatient(patientId);
+    return response;
+  }
+);
+
+export const fetchXrayTestNotByPatient = createAsyncThunk(
+  "patient/fetchXrayTestNotByPatient",
+  async (patientId: number) => {
+    const response = await getAllXrayTestNotByPatient(patientId);
     return response;
   }
 );
@@ -296,6 +308,9 @@ const patientSlice = createSlice({
     },
     setPatientXrayTest: (state, action) => {
       state.pattientXrayTests = action.payload;
+    },
+    setAddImagingModal: (state) => {
+      state.addImagintTestModal = !state.addImagintTestModal;
     },
     clearFields: (state) => {
       state.patient = {
@@ -494,6 +509,16 @@ const patientSlice = createSlice({
       })
       .addCase(bulkAddPatient.rejected, (state) => {
         state.status = "rejected";
+      })
+      .addCase(fetchXrayTestNotByPatient.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchXrayTestNotByPatient.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.xrayTest = action.payload;
+      })
+      .addCase(fetchXrayTestNotByPatient.rejected, (state) => {
+        state.status = "rejected";
       });
   },
 });
@@ -514,6 +539,7 @@ export const {
   clearFields,
   setSelectedPatientXrayTest,
   setPatientXrayTest,
+  setAddImagingModal,
 } = patientSlice.actions;
 
 export default patientSlice.reducer;

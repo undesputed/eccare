@@ -134,6 +134,23 @@ export default class Patient {
     });
   }
 
+  static async updateStatus(patientId: number): Promise<Patient | null> {
+    return new Promise((resolve, reject) => {
+      sql.query(
+        `UPDATE lms_patient SET status = 1 WHERE id = ?`,
+        [patientId],
+        (err, res: any) => {
+          if (err) {
+            console.log(err);
+            reject(new DatabaseQueryError("Error Updated Patient"));
+          } else {
+            resolve(res);
+          }
+        }
+      );
+    });
+  }
+
   static async delete(patient_id: number | string): Promise<any | null> {
     return new Promise((resolve, reject) => {
       sql.query(

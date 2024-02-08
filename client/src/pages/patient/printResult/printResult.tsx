@@ -90,7 +90,12 @@ const PrintResult = () => {
     return componentRef.current;
   }, [componentRef.current]);
 
-  const handlePrint = useReactToPrint({
+  const handlePrint = () => {
+    onHandlePrint();
+    onUpdatePatientStatus();
+  };
+
+  const onHandlePrint = useReactToPrint({
     content: reactToPrintContent,
     documentTitle: patient.fullName,
     onBeforeGetContent: handleOnBeforeGetContent,
@@ -98,6 +103,10 @@ const PrintResult = () => {
     onAfterPrint: handleAfterPrint,
     removeAfterPrint: true,
   });
+
+  const onUpdatePatientStatus = () => {
+    console.log();
+  };
 
   const fetchPatientDetails = async () => {
     try {

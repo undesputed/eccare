@@ -41,4 +41,14 @@ router.put("/api/patient", async (req: Request, res: Response) => {
   }
 });
 
+router.put("/api/patient/:patientId", async (req: Request, res: Response) => {
+  try {
+    const patientId: any = req.params.patientId;
+    const update = await Patient.updateStatus(patientId);
+    res.status(201).send(update);
+  } catch (err) {
+    throw new DatabaseQueryError("Something went wrong!!!");
+  }
+});
+
 export { router as updatePatient };

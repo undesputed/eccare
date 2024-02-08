@@ -14,6 +14,14 @@ export function getAllXrayTestByPatient(
   );
 }
 
+export function getAllXrayTestNotByPatient(
+  patientId: number
+): Promise<ec_care_xrayTest[]> {
+  return API.get<ec_care_xrayTest[]>(`xrayTest/notByPatient/${patientId}`).then(
+    (res) => res.data
+  );
+}
+
 // Create
 export function createXrayTest(
   xrayTest: ec_care_xrayTest

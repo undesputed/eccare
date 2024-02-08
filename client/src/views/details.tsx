@@ -23,6 +23,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import ec_care_patientXrayTest from "../entity/ec_care_patientXrayTest";
 import ec_care_xrayTest from "../entity/ec_care_xrayTest";
 import SelectField from "../components/SelectField/SelectField";
+import AddImagingTest from "../pages/patient/addTest/addImagingtTest";
 
 interface DetailProps {
   handleOnProceed: () => void;
@@ -38,6 +39,11 @@ interface DetailProps {
   handleXrayTestOnChangeDesc: (event: any, id: number) => void;
   handleXrayRecord: () => void;
   handleOnRemoveXrayTest: (id: any) => void;
+  handleBackButton: () => void;
+  handleOpenAddImagingTest: () => void;
+  handleAddImagingSubmit: (id: any) => void;
+  openImagingTest: boolean;
+  xrayTest: ec_care_xrayTest[];
   patientXrayTests: ec_care_patientXrayTest[];
   selectedPatientXrayTest: ec_care_patientXrayTest;
   xrayTests: ec_care_xrayTest[];
@@ -63,6 +69,11 @@ const PatientDetailsComponent: React.FC<DetailProps> = ({
   handleXrayTestOnChangeDesc,
   handleXrayRecord,
   handleOnRemoveXrayTest,
+  handleBackButton,
+  handleOpenAddImagingTest,
+  handleAddImagingSubmit,
+  openImagingTest,
+  xrayTest,
   selectedPatientXrayTest,
   xrayTests,
   patientXrayTests,
@@ -163,6 +174,19 @@ const PatientDetailsComponent: React.FC<DetailProps> = ({
           handleOnSubmitAddTests={handleOnSubmitAddTests}
         />
       </DialogComponent>
+      <DialogComponent
+        open={openImagingTest}
+        handleClose={handleOpenAddImagingTest}
+        title="Add New Imaging Test"
+        scroll="paper"
+        handleSubmit={handleAddTestSubmit}
+        showSubmit={false}
+      >
+        <AddImagingTest
+          xrayTest={xrayTest}
+          handleOnSubmitAddTests={handleAddImagingSubmit}
+        />
+      </DialogComponent>
       <Paper className="paper" elevation={0} sx={{ p: { xs: 2, md: 3 } }}>
         <Box
           position={"relative"}
@@ -189,6 +213,7 @@ const PatientDetailsComponent: React.FC<DetailProps> = ({
               }}
               color="secondary"
               startIcon={<KeyboardDoubleArrowLeftIcon />}
+              onClick={() => handleBackButton()}
             >
               BACK
             </Button>
@@ -340,7 +365,7 @@ const PatientDetailsComponent: React.FC<DetailProps> = ({
               }}
               color="secondary"
               endIcon={<AddIcon />}
-              onClick={handleAddtest}
+              onClick={handleOpenAddImagingTest}
             >
               ADD IMAGING TEST
             </Button>

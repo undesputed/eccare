@@ -149,16 +149,7 @@ const Dashboard = () => {
         lms_xrayTest_id: d,
         result: "NORMAL",
         idNum: generateIdNum(d),
-        description: `PA view of the chest reveals the lungs are clear.
-        Pulmonary structure is and shows vascular markings.
-        The mediastinum is centered and of normal width.
-        The tracheal air shadow is midline.
-        The cardiac size and configuration are within normal
-        limits.
-        Both hemidiaphragms and costophrenic angles are sharp
-        and intact.
-        The visualized osseous thoracic cage shows no bony
-        abnormality.`,
+        description: `PA view of the chest reveals the lungs are clear. Pulmonary structure is and shows vascular markings. The mediastinum is centered and of normal width. The tracheal air shadow is midline. The cardiac size and configuration are within normal limits. Both hemidiaphragms and costophrenic angles are sharp and intact. The visualized osseous thoracic cage shows no bony abnormality.`,
         testDate: new Date(),
         status: 0,
         created_at: null,
